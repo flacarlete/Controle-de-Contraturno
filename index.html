@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Controle de Contraturno — Arena</title>
-<!-- v2.1 nivelamento-unificado -->
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -1414,6 +1413,7 @@ function showPane(id) {
   if(id==='gerenciar') renderGerenciar();
   if(id==='admin')     renderAdmin();
   if(id==='sala')      initSala();
+  if(id==='chamada')   nvSubTab('chamada');
   if(id==='atrasos')   initAtrasos();
   if(id==='professores') initProfessores();
   if(id==='relatorios')  initRelatorios();
@@ -2197,12 +2197,11 @@ function diasFalta(id){
 // INIT
 // ═══════════════════════════════════════
 async function init(){
-  // Carrega frequência do Supabase antes de renderizar
   showToast('⏳ Carregando dados...', 3000);
   await carregarFreqDia();
   await carregarTodaFreq();
   _allFreqCache[todayKey] = _freqCache;
-  renderChamada();
+  nvSubTab('chamada');
 }
 init();
 
@@ -4335,15 +4334,22 @@ async function confirmarEnvioEmail() {
 
 // ── Sub-tabs do Nivelamento ───────────────────────────────
 function nvSubTab(tab) {
-  document.querySelectorAll('[id^="nvst-"]').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('[id^="nvpane-"]').forEach(p=>p.classList.remove('active'));
+  // Desativa todos os botões e panes do nivelamento
+  ['chamada','historico','alertas','frequencia','alunos','relatorios'].forEach(t => {
+    const b = document.getElementById('nvst-'+t);
+    const p = document.getElementById('nvpane-'+t);
+    if(b) b.classList.remove('active');
+    if(p) p.classList.remove('active');
+  });
+  // Ativa o selecionado
   const btn  = document.getElementById('nvst-'+tab);
   const pane = document.getElementById('nvpane-'+tab);
   if(btn)  btn.classList.add('active');
   if(pane) pane.classList.add('active');
+  // Renderiza o conteúdo
   if(tab==='historico')  renderHistory();
-  if(tab==='alertas')    renderAlertas();
-  if(tab==='frequencia') renderRelatorio();
+  if(tab==='alertas')    { alertFiltro='__todos__'; renderAlertas(); }
+  if(tab==='frequencia') { relFiltro='__todos__'; renderRelatorio(); }
   if(tab==='alunos')     renderGerenciar();
   if(tab==='chamada')    renderChamada();
   if(tab==='relatorios') initRelatorios();
