@@ -1049,9 +1049,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         <button class="at-sub-tab"        id="sala-nav-rel"        onclick="salaNavTab('rel')">📊 Relatórios</button>
       </div>
 
-      <!-- VIEW: RELATÓRIOS -->
+      <!-- VIEW: CONTROLE DIÁRIO (lista + form + detalhe) -->
       <div id="sala-view-relatorios">
-        <!-- LISTA DE RELATÓRIOS -->
+
+        <!-- LISTA -->
         <div id="sala-list-view">
           <div class="sala-header">
             <div>
@@ -1063,110 +1064,93 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
           <div id="sala-list"></div>
         </div>
 
-      <!-- FORMULÁRIO / DETALHE -->
-      <div id="sala-form-view" style="display:none">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.25rem">
-          <button class="btn" onclick="salaShowList()">← Voltar</button>
-          <div>
-            <div style="font-size:16px;font-weight:600" id="sala-form-title">Novo relatório</div>
-            <div style="font-size:12px;color:var(--text3)" id="sala-form-sub"></div>
+        <!-- FORMULÁRIO -->
+        <div id="sala-form-view" style="display:none">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.25rem">
+            <button class="btn" onclick="salaShowList()">← Voltar</button>
+            <div>
+              <div style="font-size:16px;font-weight:600" id="sala-form-title">Novo relatório</div>
+              <div style="font-size:12px;color:var(--text3)" id="sala-form-sub"></div>
+            </div>
+          </div>
+          <div class="sala-form-card">
+            <div class="sala-form-hdr">
+              <span class="sala-form-hdr-title">Controle Diário — Sala de Estudos</span>
+            </div>
+            <div class="form-meta-row">
+              <div class="form-group" style="margin:0">
+                <label class="form-label">Data</label>
+                <input class="form-input" type="date" id="sala-data">
+              </div>
+              <div class="form-group" style="margin:0">
+                <label class="form-label">Professor / Inspetor</label>
+                <input class="form-input" id="sala-professor" placeholder="Nome do responsável">
+              </div>
+            </div>
+            <div class="sala-section">
+              <div class="sala-section-title"><span class="sala-section-num">1</span> Controle de ambiente e ciclo de foco</div>
+              <div class="indicador-header">
+                <span>Indicador</span><span>Excelente</span><span>Regular</span><span>Crítico</span>
+              </div>
+              <div id="sala-indicadores"></div>
+            </div>
+            <div class="sala-section">
+              <div class="sala-section-title"><span class="sala-section-num">2</span> Check-list "Padrão Ouro"</div>
+              <div id="sala-padrao"></div>
+            </div>
+            <div class="sala-section">
+              <div class="sala-section-title"><span class="sala-section-num">3</span> Ocorrência e feedback para a coordenação</div>
+              <textarea class="form-textarea" id="sala-ocorrencias" rows="5"
+                placeholder="Cite aqui (em tópicos) qualquer situação ou ocorrência com os alunos..."></textarea>
+            </div>
+            <div class="sala-section">
+              <div class="sala-section-title"><span class="sala-section-num">4</span> Radar de performance por aluno / grupo</div>
+              <table class="radar-table">
+                <thead>
+                  <tr>
+                    <th style="width:35%">Nome</th>
+                    <th style="width:25%">Atividade / Matéria</th>
+                    <th>Observação pedagógica</th>
+                    <th style="width:32px"></th>
+                  </tr>
+                </thead>
+                <tbody id="radar-tbody"></tbody>
+              </table>
+              <button class="add-radar-btn" onclick="addRadarRow()">+ Adicionar aluno</button>
+            </div>
+            <div style="padding:16px 18px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end">
+              <button class="btn" onclick="salaShowList()">Cancelar</button>
+              <button class="btn btn-green" onclick="salvarRelatorio()">💾 Salvar controle</button>
+            </div>
           </div>
         </div>
 
-        <div class="sala-form-card">
-          <div class="sala-form-hdr">
-            <span class="sala-form-hdr-title">Controle Diário — Sala de Estudos</span>
-          </div>
-
-          <!-- META -->
-          <div class="form-meta-row">
-            <div class="form-group" style="margin:0">
-              <label class="form-label">Data</label>
-              <input class="form-input" type="date" id="sala-data">
+        <!-- DETALHE -->
+        <div id="sala-detail-view" style="display:none">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.25rem;flex-wrap:wrap">
+            <button class="btn" onclick="salaShowList()">← Voltar</button>
+            <div style="flex:1">
+              <div style="font-size:16px;font-weight:600" id="detail-title">Relatório</div>
+              <div style="font-size:12px;color:var(--text3)" id="detail-sub"></div>
             </div>
-            <div class="form-group" style="margin:0">
-              <label class="form-label">Professor / Inspetor</label>
-              <input class="form-input" id="sala-professor" placeholder="Nome do responsável">
-            </div>
+            <button class="btn" onclick="salaEditCurrent()">✏️ Editar</button>
+            <button class="btn" style="color:var(--red)" onclick="salaDeleteCurrent()">🗑 Excluir</button>
           </div>
-
-          <!-- SEÇÃO 1: Ambiente -->
-          <div class="sala-section">
-            <div class="sala-section-title"><span class="sala-section-num">1</span> Controle de ambiente e ciclo de foco</div>
-            <div class="indicador-header">
-              <span>Indicador</span><span>Excelente</span><span>Regular</span><span>Crítico</span>
-            </div>
-            <div id="sala-indicadores"></div>
-          </div>
-
-          <!-- SEÇÃO 2: Padrão Ouro -->
-          <div class="sala-section">
-            <div class="sala-section-title"><span class="sala-section-num">2</span> Check-list "Padrão Ouro"</div>
-            <div id="sala-padrao"></div>
-          </div>
-
-          <!-- SEÇÃO 3: Ocorrências -->
-          <div class="sala-section">
-            <div class="sala-section-title"><span class="sala-section-num">3</span> Ocorrência e feedback para a coordenação</div>
-            <textarea class="form-textarea" id="sala-ocorrencias" rows="5"
-              placeholder="Cite aqui (em tópicos) qualquer situação ou ocorrência com os alunos..."></textarea>
-          </div>
-
-          <!-- SEÇÃO 4: Radar -->
-          <div class="sala-section">
-            <div class="sala-section-title"><span class="sala-section-num">4</span> Radar de performance por aluno / grupo</div>
-            <table class="radar-table">
-              <thead>
-                <tr>
-                  <th style="width:35%">Nome</th>
-                  <th style="width:25%">Atividade / Matéria</th>
-                  <th>Observação pedagógica</th>
-                  <th style="width:32px"></th>
-                </tr>
-              </thead>
-              <tbody id="radar-tbody"></tbody>
-            </table>
-            <button class="add-radar-btn" onclick="addRadarRow()">+ Adicionar aluno</button>
-          </div>
-
-          <!-- AÇÕES -->
-          <div style="padding:16px 18px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end">
-            <button class="btn" onclick="salaShowList()">Cancelar</button>
-            <button class="btn btn-green" onclick="salvarRelatorio()">💾 Salvar controle</button>
-          </div>
+          <div id="sala-detail-body"></div>
         </div>
-      </div>
 
-      <!-- DETALHE (visualização) -->
-      <div id="sala-detail-view" style="display:none">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.25rem;flex-wrap:wrap">
-          <button class="btn" onclick="salaShowList()">← Voltar</button>
-          <div style="flex:1">
-            <div style="font-size:16px;font-weight:600" id="detail-title">Relatório</div>
-            <div style="font-size:12px;color:var(--text3)" id="detail-sub"></div>
-          </div>
-          <button class="btn" onclick="salaEditCurrent()">✏️ Editar</button>
-          <button class="btn" style="color:var(--red)" onclick="salaDeleteCurrent()">🗑 Excluir</button>
-        </div>
-        <div id="sala-detail-body"></div>
-      </div>
       </div><!-- /sala-view-relatorios -->
 
-
-      <!-- VIEW: RELATÓRIOS SALA ──────────────────────── -->
+      <!-- VIEW: RELATÓRIOS (histórico consolidado) -->
       <div id="sala-view-rel" style="display:none">
         <div style="margin-bottom:1.25rem">
           <div style="font-size:18px;font-weight:600;margin-bottom:4px">📊 Relatórios da Sala de Estudos</div>
           <div style="font-size:12px;color:var(--text3)">Controles diários preenchidos pelos monitores.</div>
         </div>
-
-        <!-- Sub-tabs -->
         <div class="at-sub-tabs" style="margin-bottom:1.25rem">
           <button class="at-sub-tab active" id="sala-rel-tab-controles" onclick="salaRelTab('controles')">📋 Controles</button>
-          <button class="at-sub-tab" id="sala-rel-tab-tirados" onclick="salaRelTab('tirados')">🚪 Tirados de Sala</button>
+          <button class="at-sub-tab"        id="sala-rel-tab-tirados"   onclick="salaRelTab('tirados')">🚪 Tirados de Sala</button>
         </div>
-
-        <!-- Pane: Controles -->
         <div id="sala-rel-pane-controles">
           <div style="display:flex;align-items:center;gap:12px;margin-bottom:1rem;flex-wrap:wrap">
             <div style="font-size:13px;color:var(--text3)" id="rel-count">—</div>
@@ -1183,8 +1167,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
           </div>
           <div id="sala-rel-body"></div>
         </div>
-
-        <!-- Pane: Tirados de Sala (relatório) -->
         <div id="sala-rel-pane-tirados" style="display:none">
           <div id="sala-rel-tirados-body"></div>
         </div>
@@ -1196,8 +1178,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
           <div style="font-size:18px;font-weight:600;margin-bottom:4px">🚪 Alunos tirados de sala</div>
           <div style="font-size:12px;color:var(--text3)" id="tirados-count">0 registros</div>
         </div>
-
-        <!-- Formulário rápido -->
         <div class="at-form-card" style="margin-bottom:1.25rem">
           <div class="at-form-hdr">📝 Registrar aluno tirado de sala</div>
           <div class="at-form-body">
@@ -1225,13 +1205,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
             </div>
           </div>
         </div>
-
-        <!-- Lista -->
         <div id="tirados-list"></div>
       </div>
 
     </div>
-
 
     <!-- Professores -->
     <div class="tab-pane" id="pane-professores">
@@ -1474,9 +1451,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         </div>
       </div>
     </div>
-  </div><!-- /container -->
-</div><!-- /app -->
-
 
     <!-- Pesquisa de Alunos -->
     <div class="tab-pane" id="pane-pesquisa">
@@ -1484,8 +1458,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         <div style="font-size:20px;font-weight:600;margin-bottom:4px">🔍 Pesquisa de Alunos</div>
         <div style="font-size:13px;color:var(--text3)">Busque aluno por nome ou sobrenome para ver modalidades e contato.</div>
       </div>
-
-      <!-- Campo de busca -->
       <div style="position:relative;max-width:520px;margin-bottom:1.5rem">
         <input class="form-input" id="pesq-input"
           placeholder="Digite o nome ou sobrenome do aluno..."
@@ -1496,10 +1468,12 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         <button onclick="limparPesquisa()" id="pesq-clear"
           style="display:none;position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;color:var(--text3)">✕</button>
       </div>
-
-      <!-- Resultado -->
       <div id="pesq-result"></div>
     </div>
+
+  </div><!-- /container -->
+</div><!-- /app -->
+
 
 <!-- Modais nivelamento -->
 <div class="modal-overlay" id="modal-aluno">
