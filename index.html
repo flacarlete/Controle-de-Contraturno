@@ -1683,6 +1683,7 @@ function showPane(id) {
   if(id==='orientadores') initOrientadores();
   if(id==='professores') initProfessores();
   if(id==='relatorios')  initRelatorios();
+  if(id==='pesquisa')    { document.getElementById('pesq-input')?.focus(); }
 }
 
 // ══ ADMIN ════════════════════════════════════════════════
@@ -4141,6 +4142,7 @@ function renderSalaList() {
       return `<span class="nivel-badge ${NIVEL_CLS[v]}">${i.label.split(')')[1]?.trim().split('/')[0]?.trim()||i.label} · ${NIVEL_LABEL[v]}</span>`;
     }).filter(Boolean).join('');
     const checks = PADRAO_OURO.filter(p=>r[p.id]).map(p=>`<span class="check-mark">✓ ${p.label}</span>`).join('');
+    const hasBadges = (inds||checks);
     return `<div class="sala-card" style="${hasCrit?'border-color:var(--red)':''}" onclick="salaShowDetail('${r.id}')">
       <div class="sala-card-hdr">
         <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0">
@@ -4150,9 +4152,9 @@ function renderSalaList() {
             <div class="sala-card-prof">${r.professor||'—'} ${r.usuario?'· por '+r.usuario:''}</div>
           </div>
         </div>
-        <div class="sala-card-badges">${inds}${checks}</div>
       </div>
-      ${r.ocorrencias?`<div style="padding:0 16px 12px;font-size:12px;color:var(--text2);border-top:1px solid var(--border);padding-top:8px">${r.ocorrencias.substring(0,120)}${r.ocorrencias.length>120?'…':''}</div>`:''}
+      ${hasBadges?`<div style="padding:4px 14px 10px;display:flex;gap:6px;flex-wrap:wrap">${inds}${checks}</div>`:''}
+      ${r.ocorrencias?`<div style="padding:8px 16px 12px;font-size:12px;color:var(--text2);border-top:1px solid var(--border)">${r.ocorrencias.substring(0,120)}${r.ocorrencias.length>120?'…':''}</div>`:''}
     </div>`;
   }).join('');
 }
