@@ -1644,10 +1644,11 @@ async function loadUsersFromSupabase() {
 let currentUser = null;
 
 function doLogin() {
-  const login = document.getElementById('inp-user').value.trim().toLowerCase();
+  const login = document.getElementById('inp-user').value.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
   const pwd   = document.getElementById('inp-pwd').value;
   const users = getUsers();
-  const user  = users.find(u => u.login === login && u.pwd === pwd);
+  const norm = s => s.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  const user  = users.find(u => norm(u.login) === login && u.pwd === pwd);
   const err   = document.getElementById('login-error');
   if (!user) {
     err.style.display = 'block';
@@ -6206,7 +6207,16 @@ function atInitForm(tipo){
   // Carregar usuários do Supabase
   await loadUsersFromSupabase();
   buildLoginPills();
-  const saved = localStorage.getItem('arena_session');
+  // Limpar sessão se usuário não existir mais no cache atual
+  let saved = localStorage.getItem('arena_session');
+  if(saved) {
+    try {
+      const s = JSON.parse(saved);
+      const users2 = getUsers();
+      if(!users2.find(u=>u.id===s.id)) { localStorage.removeItem('arena_session'); saved=null; }
+    } catch(e) { localStorage.removeItem('arena_session'); saved=null; }
+  }
+  if(saved) saved = saved;
   if(saved) {
     try {
       currentUser = JSON.parse(saved);
