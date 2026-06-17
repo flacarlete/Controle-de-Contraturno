@@ -2156,7 +2156,13 @@ function selectSerie(s){
 function renderSeriePills(){
   const wrap = document.getElementById('serie-pills');
   if(!activeDisc){ wrap.style.display='none'; return; }
-  const alunos = getAlunos().filter(a=>a.disc===activeDisc);
+  // Se há grupo ativo, filtrar só pelos alunos das turmas do grupo
+  let alunos = getAlunos().filter(a=>a.disc===activeDisc);
+  if(window._turmasGrupoAtivo && typeof TURMAS_NIV !== 'undefined'){
+    const turmasGrupo = TURMAS_NIV.filter(t => window._turmasGrupoAtivo.includes(t.id));
+    const nomesGrupo  = turmasGrupo.flatMap(t => t.alunos).map(n=>n.toUpperCase());
+    alunos = alunos.filter(a => nomesGrupo.includes(a.nome.toUpperCase()));
+  }
   const freq   = getFreq();
   const dayFreq= freq[todayKey]||{};
   // extract anos from turmas
@@ -2231,8 +2237,8 @@ function renderAlunoList(){
   if(serieFilter){
     turmasFiltradas = turmasDaDisc.filter(t =>
       t.alunos.some(nome => {
-        const al = allAlunos.find(a => a.nome === nome);
-        return al && al.turma.startsWith(serieFilter);
+        const al = allAlunos.find(a => a.nome.toUpperCase() === nome.toUpperCase());
+        return al && al.turma.replace('°','º').startsWith(serieFilter.replace('°','º'));
       })
     );
   }
@@ -2272,7 +2278,7 @@ function renderAlunoList(){
       const filtered = lista.filter(a => a.turma.startsWith(serieFilter));
       if(!filtered.length) return '';
     }
-    const listaFinal = serieFilter ? lista.filter(a=>a.turma.startsWith(serieFilter)) : lista;
+    const listaFinal = serieFilter ? lista.filter(a=>a.turma.replace('°','º').startsWith(serieFilter.replace('°','º'))) : lista;
     if(!listaFinal.length) return '';
 
     const eHoje = t.diaN === todayDiaN;
