@@ -2222,7 +2222,7 @@ function renderAlunoList(){
         <span style="font-size:12px;color:var(--text3)">${p}/${alunos.length}</span>
       </div>`;
     }
-    wrap.innerHTML = alunos.map(a => renderAlunoCard(a, dayFreq)).join('');
+    wrap.innerHTML = alunos.map(a => buildAlunoRow(a, dayFreq)).join('');
     return;
   }
 
@@ -2291,7 +2291,7 @@ function renderAlunoList(){
             ${p}✓ ${f>0?f+'✗':''} / ${listaFinal.length}
           </span>
         </div>
-        ${listaFinal.map(a => renderAlunoCard(a, dayFreq)).join('')}
+        ${listaFinal.map(a => buildAlunoRow(a, dayFreq)).join('')}
       </div>
     `;
   }).join('');
