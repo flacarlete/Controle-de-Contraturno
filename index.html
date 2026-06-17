@@ -450,6 +450,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .pf-card{background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden;transition:box-shadow .15s;box-shadow:var(--shadow)}
 .pf-card:hover{box-shadow:var(--shadow-lg)}
 .pf-card.has-issue{border-color:var(--red)}
+.pf-card.has-triple-issue{border-color:var(--red);border-width:2px;box-shadow:0 0 0 3px var(--red-light)}
+@keyframes pulse-red{0%,100%{opacity:1}50%{opacity:.6}}
 .pf-card-hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;gap:10px;cursor:pointer;user-select:none;transition:background .1s}
 .pf-card-hdr:hover{background:var(--bg)}
 .pf-card-left{display:flex;align-items:center;gap:10px}
@@ -1212,6 +1214,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 
       
       <div class="pf-sub-pane active" id="pfpane-hoje">
+        <div id="pf-alert-banner" style="display:none"></div>
         <div class="pf-stats" id="pf-stats"></div>
 
         <div class="pf-filter-row" id="pf-turno-filter"></div>
@@ -1854,6 +1857,27 @@ function showToast(msg, duration=2500) {
 }
 
 // ══ NIVELAMENTO DATA ════════════════════════════════════
+const TURMAS_NIV = [
+  {id:"t1",disc:"MATEMÁTICA 01",dia:"Terça Feira",diaN:2,horario:"14h15 às 15h00",alunos:["MARIANA SILVA CASTRO","MARIA LUISA MEIRELLES GRASSMANN","GUILHERME HENRIQUE DE MACEDO SAFATLE"]},
+  {id:"t2",disc:"MATEMÁTICA 01",dia:"Segunda Feira",diaN:1,horario:"15h00 às 15h45",alunos:["ELISA FERREIRA LAPOT","VALENTINA GUERRA VELASCO","VALENTINA ARRUDA SAADO","ISADORA RIBEIRO MARTINS MAGNO","MATEMÁTICA 01","TERÇA FEIRA: 15H00 ÀS 15H45","ANNA LIZ RODRIGUES LOPES","CECÍLIA MACHADO RESENDE","CECÍLIA VIEIRA DE LIMA SANTANA","EVA CUNHA DUARTE","LUISA MARQUES CARDOSO","ISABELA ARANTES GONÇALEZ"]},
+  {id:"t3",disc:"MATEMÁTICA 01",dia:"Segunda Feira",diaN:1,horario:"16h10 às 16h55",alunos:["MANUELA LOBO GONZAGA","CAROLLINE GONÇALVES DOS SANTOS","LUÍSA DE CASTRO BERNARDO"]},
+  {id:"t4",disc:"MATEMÁTICA 01",dia:"Segunda Feira",diaN:1,horario:"16h55 às 17h40",alunos:["ANNELISE SIGNATES","ARTHUR VINICIUS TRESSOLDI","CAROLINA FARIA GODINHO","PEDRO SPINDOLA CARNEIRO","VALENTINA MOURA DE ALMEIDA","VALENTINA OLIVEIRA MARTINS","STELLA ARANTES BICALHO","ARTHUR VINICIUS TRESSOLDI","STELLA ARANTES BICALHO"]},
+  {id:"t5",disc:"MATEMÁTICA 02",dia:"Quarta Feira",diaN:3,horario:"14h15 às 15h00",alunos:["MARINA AYRES ROLDÃO","MATEMÁTICA 02","SEXTA FEIRA: 14H15 ÀS 15H00","MARIANA SILVA CASTRO"]},
+  {id:"t6",disc:"MATEMÁTICA 02",dia:"Quarta Feira",diaN:3,horario:"15h00 às 15h45",alunos:["ANNA LIZ RODRIGUES LOPES","ANTÔNIO CAMPOS MACEDO","CECÍLIA CHAVES RAUH","CECÍLIA MACHADO RESENDE","ELISA FERREIRA LAPOT","ISRAEL ANTONIO RIBEIRO FILHO","LUIZ HENRIQUE LEAL ROSA","JÚLIA LIMA SANTOS","GABRIEL CORREIA FERNANDES","STELLA ARAUJO PINTO BERNARDES DE PAIVA","ISADORA RIBEIRO MARTINS MAGNO","MATEMÁTICA 02","SEXTA FEIRA: 15H00 ÀS 15H45","EVA CUNHA DUARTE","LUIZ HENRIQUE LEAL ROSA","MARIA PAULA RODRIGUES DE CASTRO","LUISA FARIA LOULY CAIXE","LEONORA RASSI MAFRA","VALENTINA GUERRA VELASCO","SOPHIA CAMPOS LIMA"]},
+  {id:"t7",disc:"MATEMÁTICA 02",dia:"Terça Feira",diaN:2,horario:"16h10 às 16h55",alunos:["MARIA LUISA PRADO LOURENÇO","MARIANA MENEZES RABUSKE","RAFAELA CANEDO CUNHA","HEITOR CHAUD DO PRADO","VITTÓRIA MOTA CAETANO DE CARVALHO","CAROLLINE GONÇALVES DOS SANTOS","PEDRO VIANA FAISANO FLEURY"]},
+  {id:"t8",disc:"MATEMÁTICA 02",dia:"Terça Feira",diaN:2,horario:"16h55 às 17h40",alunos:["PEDRO SPINDOLA CARNEIRO","ESTELA GOMES FLEURY","TÚLIO MEIRELES RODRIGUES","STELLA ARANTES BICALHO"]},
+  {id:"t9",disc:"GRAMÁTICA 01",dia:"Terça Feira",diaN:2,horario:"15h00 às 15h45",alunos:["ESTEVÃO ALVES LIMA"]},
+  {id:"t10",disc:"GRAMÁTICA 01",dia:"Segunda Feira",diaN:1,horario:"14h15 às 15h00",alunos:["VALENTINA ARRUDA SAADO","GRAMÁTICA 01","TERÇA FEIRA: 14H15 ÀS 15H00","ANNA LIZ RODRIGUES LOPES","CECÍLIA MACHADO RESENDE","ELISA FERREIRA LAPOT","ISABELA ARANTES GONÇALEZ","ESTELA COSTA BARRETO"]},
+  {id:"t11",disc:"GRAMÁTICA 01",dia:"Segunda Feira",diaN:1,horario:"16h55 às 17h40",alunos:["MANUELA LOBO GONZAGA","JOÃO GUILHERME SOUSA MAIA"]},
+  {id:"t12",disc:"GRAMÁTICA 01",dia:"Segunda Feira",diaN:1,horario:"16h10 às 16h55",alunos:["CAROLINA FARIA GODINHO","TÚLIO MEIRELES RODRIGUES","OTÁVIO CRISTÓFOLI LEÃO"]},
+  {id:"t13",disc:"INGLÊS",dia:"Quarta Feira",diaN:3,horario:"16h10 às 16h55",alunos:["ANTÔNIO CASTINEIRAS BEZERRIL"]},
+  {id:"t14",disc:"INGLÊS",dia:"Terça Feira",diaN:2,horario:"15h00 às 15h45",alunos:["ELISA FERREIRA LAPOT","LORENZZO MIGUEL LOPES AQUINO MACHADO","GABRIEL CORREIA FERNANDES","VALENTINA GUERRA VELASCO","STELLA ARAÚJO PINTO BERNARDES DE PAIVA","ESTELA COSTA BARRETO","MARIA PAULA RODRIGUES DE CASTRO","INGLÊS","QUARTA FEIRA: 15H00 ÀS 15H45","ANTÔNIO CAMPOS MACEDO","ANNA LIZ RODRIGUES LOPES","CECÍLIA MACHADO RESENDE","DAVI SOARES FERNANDES","PEDRO HENRIQUE BRASILEIRO MACHADO","ISADORA RIBEIRO MARTINS MAGNO"]},
+  {id:"t15",disc:"INGLÊS",dia:"Terça Feira",diaN:2,horario:"16h10 às 16h55",alunos:["VICTOR HUGO ALVES ZAFRED","INGLÊS","QUARTA FEIRA: 14H15 ÀS 15H00","MANUELA LOBO GONZAGA"]},
+  {id:"t16",disc:"INGLÊS",dia:"Quarta Feira",diaN:3,horario:"16h55 às 17h40",alunos:["ARTHUR VINICIUS TRESSOLDI","JOSÉ PAULO ZUBEID IVO","PEDRO HENRIQUE FERNANDES SILVA"]},
+  {id:"t17",disc:"REDAÇÃO 01",dia:"",diaN:0,horario:"",alunos:["ANTÔNIO CAMPOS MACEDO","BENÍCIO SILVA DINIZ","CECÍLIA MACHADO RESENDE","CECÍLIA VIEIRA DE LIMA SANTANA","JOSE AUGUSTO QUEIROZ DE AGUIAR NETO","ANGELINA BRUNO ROCHA","PEDRO HENRIQUE BRASILEIRO MACHADO","ISADORA RIBEIRO MARTINS MAGNO"]},
+  {id:"t18",disc:"REDAÇÃO 01",dia:"Quarta Feira",diaN:3,horario:"14h15 às 18h25",alunos:["TÚLIO MEIRELES RODRIGUES","OTÁVIO CRISTÓFOLI LEÃO"]}
+];
+
 const DADOS_INICIAIS = {
   disciplinas: ["MATEMÁTICA", "MATEMÁTICA 01", "MATEMÁTICA 02", "GRAMÁTICA 01", "INGLÊS", "REDAÇÃO 01"],
   alunos: [{"id": "a1", "nome": "MARIANA SILVA CASTRO", "turma": "6º A", "disc": "MATEMÁTICA", "tel": ""}, {"id": "a2", "nome": "MARIA LUISA MEIRELLES GRASSMANN", "turma": "6º E", "disc": "MATEMÁTICA", "tel": ""}, {"id": "a3", "nome": "GUILHERME HENRIQUE DE MACEDO SAFATLE", "turma": "6º C", "disc": "MATEMÁTICA", "tel": ""}, {"id": "a4", "nome": "ELISA FERREIRA LAPOT", "turma": "7º C", "disc": "MATEMÁTICA", "tel": ""}, {"id": "a5", "nome": "VALENTINA GUERRA VELASCO", "turma": "7º A", "disc": "MATEMÁTICA", "tel": ""}, {"id": "a6", "nome": "VALENTINA ARRUDA SAADO", "turma": "7º C", "disc": "MATEMÁTICA", "tel": ""}, {"id": "a7", "nome": "ISADORA RIBEIRO MARTINS MAGNO", "turma": "7º C", "disc": "MATEMÁTICA", "tel": ""}, {"id": "a8", "nome": "ANNA LIZ RODRIGUES LOPES", "turma": "7º C", "disc": "MATEMÁTICA 01", "tel": ""}, {"id": "a9", "nome": "CECÍLIA MACHADO RESENDE", "turma": "7º C", "disc": "MATEMÁTICA 01", "tel": ""}, {"id": "a10", "nome": "CECÍLIA VIEIRA DE LIMA SANTANA", "turma": "7º H", "disc": "MATEMÁTICA 01", "tel": ""}, {"id": "a11", "nome": "EVA CUNHA DUARTE", "turma": "7º H", "disc": "MATEMÁTICA 01", "tel": ""}, {"id": "a12", "nome": "LUISA MARQUES CARDOSO", "turma": "7º H", "disc": "MATEMÁTICA 01", "tel": ""}, {"id": "a13", "nome": "ISABELA ARANTES GONÇALEZ", "turma": "7º H", "disc": "MATEMÁTICA 01", "tel": ""}, {"id": "a14", "nome": "MANUELA LOBO GONZAGA", "turma": "8º C", "disc": "MATEMÁTICA 01", "tel": ""}, {"id": "a15", "nome": "CAROLLINE GONÇALVES DOS SANTOS", "turma": "8º A", "disc": "MATEMÁTICA 01", "tel": ""}, {"id": "a16", "nome": "LUÍSA DE CASTRO BERNARDO", "turma": "8º D", "disc": "MATEMÁTICA 01", "tel": ""}, {"id": "a17", "nome": "ANNELISE SIGNATES", "turma": "9º C", "disc": "MATEMÁTICA 01", "tel": ""}, {"id": "a18", "nome": "ARTHUR VINICIUS TRESSOLDI", "turma": "9º F", "disc": "MATEMÁTICA 01", "tel": ""}, {"id": "a19", "nome": "CAROLINA FARIA GODINHO", "turma": "9º C", "disc": "MATEMÁTICA 01", "tel": ""}, {"id": "a20", "nome": "PEDRO SPINDOLA CARNEIRO", "turma": "9º A", "disc": "MATEMÁTICA 01", "tel": ""}, {"id": "a21", "nome": "VALENTINA MOURA DE ALMEIDA", "turma": "9º C", "disc": "MATEMÁTICA 01", "tel": ""}, {"id": "a22", "nome": "VALENTINA OLIVEIRA MARTINS", "turma": "9º A", "disc": "MATEMÁTICA 01", "tel": ""}, {"id": "a23", "nome": "STELLA ARANTES BICALHO", "turma": "9º B", "disc": "MATEMÁTICA 01", "tel": ""}, {"id": "a24", "nome": "MARINA AYRES ROLDÃO", "turma": "6º E", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a25", "nome": "MARIANA SILVA CASTRO", "turma": "6º A", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a26", "nome": "ANNA LIZ RODRIGUES LOPES", "turma": "7º C", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a27", "nome": "ANTÔNIO CAMPOS MACEDO", "turma": "7º F", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a28", "nome": "CECÍLIA CHAVES RAUH", "turma": "7º A", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a29", "nome": "CECÍLIA MACHADO RESENDE", "turma": "7º C", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a30", "nome": "ELISA FERREIRA LAPOT", "turma": "7º C", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a31", "nome": "ISRAEL ANTONIO RIBEIRO FILHO", "turma": "7º C", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a32", "nome": "LUIZ HENRIQUE LEAL ROSA", "turma": "7º G", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a33", "nome": "JÚLIA LIMA SANTOS", "turma": "7º A", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a34", "nome": "GABRIEL CORREIA FERNANDES", "turma": "7º A", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a35", "nome": "STELLA ARAUJO PINTO BERNARDES DE PAIVA", "turma": "7º A", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a36", "nome": "ISADORA RIBEIRO MARTINS MAGNO", "turma": "7º C", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a37", "nome": "EVA CUNHA DUARTE", "turma": "7º H", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a38", "nome": "MARIA PAULA RODRIGUES DE CASTRO", "turma": "7º A", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a39", "nome": "LUISA FARIA LOULY CAIXE", "turma": "7º E", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a40", "nome": "LEONORA RASSI MAFRA", "turma": "7º B", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a41", "nome": "VALENTINA GUERRA VELASCO", "turma": "7º A", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a42", "nome": "SOPHIA CAMPOS LIMA", "turma": "7º A", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a43", "nome": "MARIA LUISA PRADO LOURENÇO", "turma": "8º F", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a44", "nome": "MARIANA MENEZES RABUSKE", "turma": "8º H", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a45", "nome": "RAFAELA CANEDO CUNHA", "turma": "8º E", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a46", "nome": "HEITOR CHAUD DO PRADO", "turma": "8º D", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a47", "nome": "VITTÓRIA MOTA CAETANO DE CARVALHO", "turma": "8º G", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a48", "nome": "CAROLLINE GONÇALVES DOS SANTOS", "turma": "8º A", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a49", "nome": "PEDRO VIANA FAISANO FLEURY", "turma": "8º C", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a50", "nome": "PEDRO SPINDOLA CARNEIRO", "turma": "9º A", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a51", "nome": "ESTELA GOMES FLEURY", "turma": "9º D", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a52", "nome": "TÚLIO MEIRELES RODRIGUES", "turma": "9º E", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a53", "nome": "STELLA ARANTES BICALHO", "turma": "9º B", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a54", "nome": "ESTEVÃO ALVES LIMA", "turma": "6º D", "disc": "GRAMÁTICA 01", "tel": ""}, {"id": "a55", "nome": "VALENTINA ARRUDA SAADO", "turma": "7º C", "disc": "GRAMÁTICA 01", "tel": ""}, {"id": "a56", "nome": "ANNA LIZ RODRIGUES LOPES", "turma": "7º C", "disc": "GRAMÁTICA 01", "tel": ""}, {"id": "a57", "nome": "CECÍLIA MACHADO RESENDE", "turma": "7º C", "disc": "GRAMÁTICA 01", "tel": ""}, {"id": "a58", "nome": "ELISA FERREIRA LAPOT", "turma": "7º C", "disc": "GRAMÁTICA 01", "tel": ""}, {"id": "a59", "nome": "ISABELA ARANTES GONÇALEZ", "turma": "7º H", "disc": "GRAMÁTICA 01", "tel": ""}, {"id": "a60", "nome": "ESTELA COSTA BARRETO", "turma": "7º A", "disc": "GRAMÁTICA 01", "tel": ""}, {"id": "a61", "nome": "MANUELA LOBO GONZAGA", "turma": "8º C", "disc": "GRAMÁTICA 01", "tel": ""}, {"id": "a62", "nome": "JOÃO GUILHERME SOUSA MAIA", "turma": "8º H", "disc": "GRAMÁTICA 01", "tel": ""}, {"id": "a63", "nome": "CAROLINA FARIA GODINHO", "turma": "9º C", "disc": "GRAMÁTICA 01", "tel": ""}, {"id": "a64", "nome": "TÚLIO MEIRELES RODRIGUES", "turma": "9º E", "disc": "GRAMÁTICA 01", "tel": ""}, {"id": "a65", "nome": "OTÁVIO CRISTÓFOLI LEÃO", "turma": "9º C", "disc": "GRAMÁTICA 01", "tel": ""}, {"id": "a66", "nome": "ANTÔNIO CASTINEIRAS BEZERRIL", "turma": "6º A", "disc": "INGLÊS", "tel": ""}, {"id": "a67", "nome": "EDUARDO MOTA TORRICELLI", "turma": "6º G", "disc": "INGLÊS", "tel": ""}, {"id": "a68", "nome": "ELISA FERREIRA LAPOT", "turma": "7º C", "disc": "INGLÊS", "tel": ""}, {"id": "a69", "nome": "LORENZZO MIGUEL LOPES AQUINO MACHADO", "turma": "7º B", "disc": "INGLÊS", "tel": ""}, {"id": "a70", "nome": "GABRIEL CORREIA FERNANDES", "turma": "7º A", "disc": "INGLÊS", "tel": ""}, {"id": "a71", "nome": "VALENTINA GUERRA VELASCO", "turma": "7º A", "disc": "INGLÊS", "tel": ""}, {"id": "a72", "nome": "STELLA ARAÚJO PINTO BERNARDES DE PAIVA", "turma": "7º A", "disc": "INGLÊS", "tel": ""}, {"id": "a73", "nome": "ESTELA COSTA BARRETO", "turma": "7º A", "disc": "INGLÊS", "tel": ""}, {"id": "a74", "nome": "ANTÔNIO CAMPOS MACEDO", "turma": "7º F", "disc": "INGLÊS", "tel": ""}, {"id": "a75", "nome": "ANNA LIZ RODRIGUES LOPES", "turma": "7º C", "disc": "INGLÊS", "tel": ""}, {"id": "a76", "nome": "CECÍLIA MACHADO RESENDE", "turma": "7º C", "disc": "INGLÊS", "tel": ""}, {"id": "a77", "nome": "DAVI SOARES FERNANDES", "turma": "7º H", "disc": "INGLÊS", "tel": ""}, {"id": "a78", "nome": "MARIA PAULA RODRIGUES DE CASTRO", "turma": "7º A", "disc": "INGLÊS", "tel": ""}, {"id": "a79", "nome": "PEDRO HENRIQUE BRASILEIRO MACHADO", "turma": "7º A", "disc": "INGLÊS", "tel": ""}, {"id": "a80", "nome": "ISADORA RIBEIRO MARTINS MAGNO", "turma": "7º C", "disc": "INGLÊS", "tel": ""}, {"id": "a81", "nome": "VICTOR HUGO ALVES ZAFRED", "turma": "8º C", "disc": "INGLÊS", "tel": ""}, {"id": "a82", "nome": "MANUELA LOBO GONZAGA", "turma": "8º C", "disc": "INGLÊS", "tel": ""}, {"id": "a83", "nome": "ANTÔNIO CAMPOS MACEDO", "turma": "7º F", "disc": "REDAÇÃO 01", "tel": ""}, {"id": "a84", "nome": "BENÍCIO SILVA DINIZ", "turma": "7º C", "disc": "REDAÇÃO 01", "tel": ""}, {"id": "a85", "nome": "CECÍLIA MACHADO RESENDE", "turma": "7º C", "disc": "REDAÇÃO 01", "tel": ""}, {"id": "a86", "nome": "CECÍLIA VIEIRA DE LIMA SANTANA", "turma": "7º H", "disc": "REDAÇÃO 01", "tel": ""}, {"id": "a87", "nome": "JOSE AUGUSTO QUEIROZ DE AGUIAR NETO", "turma": "7º H", "disc": "REDAÇÃO 01", "tel": ""}, {"id": "a88", "nome": "ANGELINA BRUNO ROCHA", "turma": "7º E", "disc": "REDAÇÃO 01", "tel": ""}, {"id": "a89", "nome": "PEDRO HENRIQUE BRASILEIRO MACHADO", "turma": "7º A", "disc": "REDAÇÃO 01", "tel": ""}, {"id": "a90", "nome": "ISADORA RIBEIRO MARTINS MAGNO", "turma": "7º C", "disc": "REDAÇÃO 01", "tel": ""}, {"id": "a91", "nome": "TÚLIO MEIRELES RODRIGUES", "turma": "9º E", "disc": "REDAÇÃO 01", "tel": ""}, {"id": "a92", "nome": "OTÁVIO CRISTÓFOLI LEÃO", "turma": "9º C", "disc": "REDAÇÃO 01", "tel": ""}, {"id": "a93", "nome": "ARTHUR VINICIUS TRESSOLDI", "turma": "9º F", "disc": "REDAÇÃO 01", "tel": ""}, {"id": "a94", "nome": "JOSÉ PAULO ZUBEID IVO", "turma": "9º A", "disc": "REDAÇÃO 01", "tel": ""}, {"id": "a95", "nome": "HEITOR MENDONÇA OLIVEIRA", "turma": "9º A", "disc": "REDAÇÃO 01", "tel": ""}, {"id": "a96", "nome": "PEDRO HENRIQUE FERNANDES SILVA", "turma": "9º E", "disc": "REDAÇÃO 01", "tel": ""}, {"id": "a97", "nome": "MARIANA SILVA CASTRO", "turma": "6º A", "disc": "MATEMÁTICA 01", "tel": ""}, {"id": "a98", "nome": "MARIA LUISA MEIRELLES GRASSMANN", "turma": "6º E", "disc": "MATEMÁTICA 01", "tel": ""}, {"id": "a99", "nome": "GUILHERME HENRIQUE DE MACEDO SAFATLE", "turma": "6º C", "disc": "MATEMÁTICA 01", "tel": ""}, {"id": "a100", "nome": "ARTHUR VINICIUS TRESSOLDI", "turma": "9º F", "disc": "INGLÊS", "tel": ""}, {"id": "a101", "nome": "JOSÉ PAULO ZUBEID IVO", "turma": "9º A", "disc": "INGLÊS", "tel": ""}, {"id": "a102", "nome": "HEITOR MENDONÇA OLIVEIRA", "turma": "9º A", "disc": "INGLÊS", "tel": ""}, {"id": "a103", "nome": "PEDRO HENRIQUE FERNANDES SILVA", "turma": "9º E", "disc": "INGLÊS", "tel": ""}],
@@ -2121,57 +2145,117 @@ function renderSeriePills(){
 
 function renderAlunoList(){
   if(!activeDisc) return;
-  let alunos = getAlunos().filter(a=>a.disc===activeDisc);
-  // filter by serie
-  if(activeSerie !== '__todos__'){
-    const prefix = activeSerie.replace(' ANO','');
-    alunos = alunos.filter(a=>a.turma.startsWith(prefix));
-  }
-  const freq   = getFreq();
-  const dayFreq= freq[todayKey]||{};
+
+  // Turmas desta disciplina no TURMAS_NIV
+  const turmasDaDisc = (typeof TURMAS_NIV !== 'undefined')
+    ? TURMAS_NIV.filter(t => t.disc === activeDisc)
+    : [];
+
+  const todayDiaN = new Date().getDay(); // 0=dom,1=seg,...,6=sab
+  const freq    = getFreq();
+  const dayFreq = freq[todayKey] || {};
+  const allAlunos = getAlunos().filter(a => a.disc === activeDisc);
+
+  // Filtrar por série se selecionado
+  const serieFilter = activeSerie !== '__todos__'
+    ? activeSerie.replace(' ANO','') : null;
+
   const serieLabel = activeSerie==='__todos__' ? 'Todos os anos' : activeSerie;
   document.getElementById('chamada-disc-title').textContent = activeDisc + ' — ' + serieLabel;
-  document.getElementById('chamada-disc-sub').textContent =
-    `${alunos.length} aluno${alunos.length!==1?'s':''} · ${fmtDate(todayKey)}`;
 
-  // progress
-  const p = alunos.filter(a=>dayFreq[a.id]==='P').length;
-  const f = alunos.filter(a=>dayFreq[a.id]==='F').length;
-  if(alunos.length>0){
-    document.getElementById('progress-wrap').style.display='block';
-    const pct = Math.round(p/alunos.length*100);
-    document.getElementById('prog-label').textContent=`${p} presente${p!==1?'s':''} · ${f} falta${f!==1?'s':''}`;
-    document.getElementById('prog-pct').textContent=pct+'%';
-    document.getElementById('prog-fill').style.width=pct+'%';
-    document.getElementById('prog-fill').style.background = pct>=80?'var(--accent-mid)':pct>=50?'#E9A823':'var(--red)';
-  } else {
-    document.getElementById('progress-wrap').style.display='none';
-  }
+  const wrap = document.getElementById('aluno-list');
 
-  const list = document.getElementById('aluno-list');
-  if(!alunos.length){
-    list.innerHTML=`<div class="empty"><span class="e-ico">👤</span><p>Nenhum aluno nesta seleção.</p></div>`;
+  if(turmasDaDisc.length === 0){
+    // Fallback: comportamento original sem TURMAS_NIV
+    let alunos = allAlunos;
+    if(serieFilter) alunos = alunos.filter(a=>a.turma.startsWith(serieFilter));
+    document.getElementById('chamada-disc-sub').textContent =
+      `${alunos.length} aluno${alunos.length!==1?'s':''} · ${fmtDate(todayKey)}`;
+    const p = alunos.filter(a=>dayFreq[a.id]==='P').length;
+    const f = alunos.filter(a=>dayFreq[a.id]==='F').length;
+    const prog = document.getElementById('chamada-progress');
+    if(prog){
+      const pct = alunos.length ? Math.round(p/alunos.length*100) : 0;
+      prog.innerHTML = `<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+        <div style="flex:1;height:6px;background:var(--border);border-radius:3px">
+          <div style="width:${pct}%;height:100%;background:var(--accent);border-radius:3px;transition:width .3s"></div>
+        </div>
+        <span style="font-size:12px;color:var(--text3)">${p}/${alunos.length}</span>
+      </div>`;
+    }
+    wrap.innerHTML = alunos.map(a => renderAlunoCard(a, dayFreq)).join('');
     return;
   }
 
-  // group by turma
-  const turmas = [...new Set(alunos.map(a=>a.turma))].sort();
-  let html = '';
-  turmas.forEach(turma => {
-    const grupo = alunos.filter(a=>a.turma===turma);
-    const fT = grupo.filter(a=>dayFreq[a.id]==='F').length;
-    const pT = grupo.filter(a=>dayFreq[a.id]==='P').length;
-    html += `<div style="margin-bottom:14px">
-      <div style="display:flex;align-items:center;gap:8px;padding:6px 0;margin-bottom:4px;border-bottom:1.5px solid var(--surface3)">
-        <span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.05em">📚 ${turma}</span>
-        <span style="font-size:11px;color:var(--text3)">${grupo.length} alunos</span>
-        ${fT>0?`<span style="font-size:11px;background:var(--red-bg);color:var(--red);padding:1px 7px;border-radius:8px;font-weight:500">✕ ${fT}</span>`:''}
-        ${pT>0?`<span style="font-size:11px;background:var(--green-bg);color:var(--green);padding:1px 7px;border-radius:8px;font-weight:500">✓ ${pT}</span>`:''}
-      </div>
-      ${grupo.map(a=>buildAlunoRow(a,dayFreq)).join('')}
-    </div>`;
+  // Filtrar turmas por série se selecionado
+  let turmasFiltradas = turmasDaDisc;
+  if(serieFilter){
+    turmasFiltradas = turmasDaDisc.filter(t =>
+      t.alunos.some(nome => {
+        const al = allAlunos.find(a => a.nome === nome);
+        return al && al.turma.startsWith(serieFilter);
+      })
+    );
+  }
+
+  // Ordenar: turma do dia atual primeiro
+  turmasFiltradas = [...turmasFiltradas].sort((a,b) => {
+    const aHoje = a.diaN === todayDiaN ? -1 : 0;
+    const bHoje = b.diaN === todayDiaN ? -1 : 0;
+    if(aHoje !== bHoje) return aHoje - bHoje;
+    return a.horario.localeCompare(b.horario);
   });
-  list.innerHTML = html;
+
+  // Total geral
+  const totalAlunos = turmasFiltradas.reduce((acc,t) => {
+    const lista = t.alunos.map(n => allAlunos.find(a=>a.nome===n)).filter(Boolean);
+    return acc + lista.length;
+  }, 0);
+  const totalP = Object.values(dayFreq).filter(v=>v==='P').length;
+  document.getElementById('chamada-disc-sub').textContent =
+    `${totalAlunos} aluno${totalAlunos!==1?'s':''} · ${fmtDate(todayKey)}`;
+
+  const prog = document.getElementById('chamada-progress');
+  if(prog){
+    const pct = totalAlunos ? Math.round(totalP/totalAlunos*100) : 0;
+    prog.innerHTML = `<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+      <div style="flex:1;height:6px;background:var(--border);border-radius:3px">
+        <div style="width:${pct}%;height:100%;background:var(--accent);border-radius:3px;transition:width .3s"></div>
+      </div>
+      <span style="font-size:12px;color:var(--text3)">${totalP}/${totalAlunos}</span>
+    </div>`;
+  }
+
+  // Renderizar agrupado por turma
+  wrap.innerHTML = turmasFiltradas.map(t => {
+    const lista = t.alunos.map(n => allAlunos.find(a=>a.nome===n)).filter(Boolean);
+    if(serieFilter) {
+      const filtered = lista.filter(a => a.turma.startsWith(serieFilter));
+      if(!filtered.length) return '';
+    }
+    const listaFinal = serieFilter ? lista.filter(a=>a.turma.startsWith(serieFilter)) : lista;
+    if(!listaFinal.length) return '';
+
+    const eHoje = t.diaN === todayDiaN;
+    const p = listaFinal.filter(a=>dayFreq[a.id]==='P').length;
+    const f = listaFinal.filter(a=>dayFreq[a.id]==='F').length;
+
+    return `
+      <div style="margin-bottom:1.5rem">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;padding:8px 12px;
+                    background:${eHoje?'var(--accent)':'var(--bg)'};
+                    color:${eHoje?'#fff':'var(--text2)'};
+                    border-radius:var(--radius-lg);border:1px solid ${eHoje?'var(--accent)':'var(--border)'}">
+          <span style="font-size:13px;font-weight:600">${t.dia} · ${t.horario}</span>
+          ${eHoje?'<span style="font-size:10px;background:rgba(255,255,255,0.25);padding:2px 8px;border-radius:10px;margin-left:auto">HOJE</span>':''}
+          <span style="font-size:12px;${eHoje?'':'margin-left:auto;color:var(--text3)'}">
+            ${p}✓ ${f>0?f+'✗':''} / ${listaFinal.length}
+          </span>
+        </div>
+        ${listaFinal.map(a => renderAlunoCard(a, dayFreq)).join('')}
+      </div>
+    `;
+  }).join('');
 }
 
 async function setFreq(alunoId, status){
@@ -3132,6 +3216,7 @@ function pfRenderCards() {
   }
   grid.innerHTML = profs.map(p => pfBuildCard(p)).join('');
   pfRenderStats();
+  pfCheckAlerts();
 }
 
 function pfBuildCard(prof) {
@@ -3144,7 +3229,9 @@ function pfBuildCard(prof) {
   const hasIssue  = issues.length > 0;
   const pct = Math.round(doneCount/CHECKS.length*100);
   const badge = hasIssue
-    ? `<span class="pf-issue-badge pf-issue-bad">⚠ ${issues.length} problema${issues.length>1?'s':''}</span>`
+    ? issues.length >= 3
+      ? `<span class="pf-issue-badge pf-issue-bad" style="background:var(--red);color:#fff;font-weight:700;animation:pulse-red 1.5s infinite">🚨 ${issues.length} problemas</span>`
+      : `<span class="pf-issue-badge pf-issue-bad">⚠ ${issues.length} problema${issues.length>1?'s':''}</span>`
     : doneCount>0
       ? `<span class="pf-issue-badge pf-issue-ok">✓ ${pct}%</span>`
       : `<span class="pf-issue-badge pf-issue-nd">Não verificado</span>`;
@@ -3232,6 +3319,36 @@ function pfSaveNote(profId, checkId, nota) {
   pfNotesAll[pfTodayKey][k] = nota;
   const val = pfChecksCache[k];
   if (val) supaUpsert([{data:pfTodayKey, prof_id:profId, check_id:checkId, status:val, nota, registrado_por:currentUser?.name||''}], 'prof_checks').catch(e=>console.error(e.message));
+}
+
+function pfCheckAlerts() {
+  // Só mostra para coord e admin
+  if(!currentUser || !['admin','coord'].includes(currentUser.role)) return;
+  const checks = pfChecksCache;
+  const wrap = document.getElementById('pf-alert-banner');
+  if(!wrap) return;
+  // Professores com 3+ erros hoje
+  const profs = typeof pfFilteredProfs === 'function' ? pfFilteredProfs() : [];
+  const alertas = profs.filter(p => {
+    const issues = CHECKS.filter(c => checks[p.id+'__'+c.id]==='bad');
+    return issues.length >= 3;
+  });
+  if(!alertas.length) { wrap.style.display='none'; return; }
+  wrap.style.display = 'block';
+  wrap.innerHTML = `
+    <div style="background:var(--red-bg);border:1.5px solid var(--red);border-radius:var(--radius-lg);
+                padding:12px 16px;margin-bottom:1rem;display:flex;align-items:center;gap:10px">
+      <span style="font-size:20px">🚨</span>
+      <div>
+        <div style="font-size:13px;font-weight:700;color:var(--red)">
+          ${alertas.length} professor${alertas.length>1?'es':''} com 3 ou mais problemas registrados hoje
+        </div>
+        <div style="font-size:12px;color:var(--text2);margin-top:2px">
+          ${alertas.map(p=>p.nome).join(', ')}
+        </div>
+      </div>
+    </div>
+  `;
 }
 
 function pfRenderStats() {
