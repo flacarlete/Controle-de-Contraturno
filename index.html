@@ -2109,7 +2109,7 @@ function renderDiscPills(){
     // Alunos deste grupo (nas turmas do grupo)
     const turmasDoGrupo = TURMAS_NIV.filter(t => g.turmas.includes(t.id));
     const nomesDoGrupo  = turmasDoGrupo.flatMap(t => t.alunos);
-    const lista = allAlunos.filter(a => nomesDoGrupo.includes(a.nome) && a.disc === g.disc);
+    const lista = allAlunos.filter(a => nomesDoGrupo.includes(a.nome.toUpperCase()) && a.disc === g.disc);
     const faltas = lista.filter(a => dayFreq[a.id] === 'F').length;
     const isActive = activeGrupoId === g.id;
     const eHoje = g.diaN === new Date().getDay();
@@ -2247,7 +2247,7 @@ function renderAlunoList(){
 
   // Total geral
   const totalAlunos = turmasFiltradas.reduce((acc,t) => {
-    const lista = t.alunos.map(n => allAlunos.find(a=>a.nome===n)).filter(Boolean);
+    const lista = t.alunos.map(n => allAlunos.find(a=>a.nome.toUpperCase()===n.toUpperCase() && a.disc===t.disc)).filter(Boolean);
     return acc + lista.length;
   }, 0);
   const totalP = Object.values(dayFreq).filter(v=>v==='P').length;
@@ -2267,7 +2267,7 @@ function renderAlunoList(){
 
   // Renderizar agrupado por turma
   wrap.innerHTML = turmasFiltradas.map(t => {
-    const lista = t.alunos.map(n => allAlunos.find(a=>a.nome===n)).filter(Boolean);
+    const lista = t.alunos.map(n => allAlunos.find(a=>a.nome.toUpperCase()===n.toUpperCase() && a.disc===t.disc)).filter(Boolean);
     if(serieFilter) {
       const filtered = lista.filter(a => a.turma.startsWith(serieFilter));
       if(!filtered.length) return '';
