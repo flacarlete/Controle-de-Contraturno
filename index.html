@@ -1391,6 +1391,15 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       </div>
       <div class="at-sub-pane active" id="ort-pane-hoje">
         <div class="at-stats" id="ort-stats" style="margin-bottom:1.25rem"></div>
+
+        <!-- Seção Observações e Atrasos -->
+        <div style="margin-bottom:1.5rem">
+          <div style="font-size:13px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.75rem">
+            📝 Observações e Atrasos do Dia
+          </div>
+          <div id="ort-obs-list"></div>
+        </div>
+
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:8px">
           <div style="font-size:13px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.05em">Atividades do dia</div>
           <div class="filters" id="ort-filters"></div>
@@ -4676,6 +4685,7 @@ function ortTab(tab) {
 async function initOrientadores() {
   showToast('⏳ Carregando atividades...');
   await ortLoadAll();
+  await ortObsLoadAll();
   ortTab('hoje');
 }
 
@@ -4740,6 +4750,7 @@ function renderOrtToday() {
       </div>
     </div>`;
   }).join('');
+  renderOrtObs();
 }
 
 function ortSetFilter(f) { ortFilter=f; renderOrtToday(); }
@@ -7974,6 +7985,114 @@ function copiarNumerosTurma(event, btn) {
     document.body.removeChild(el);
     showToast(`✓ ${numeros.length} número${numeros.length!==1?'s':''} copiado${numeros.length!==1?'s':''}!`);
   });
+}
+
+
+// ══════════════════════════════════════════════════════════
+// ORIENTADORES — OBSERVAÇÕES E ATRASOS
+// ══════════════════════════════════════════════════════════
+let ortObsCache = {}; // { "2025-01-01": { "NOME": {obs:"", atraso_hora:"", atraso_just:""} } }
+
+async function ortObsLoadAll() {
+  try {
+    const data = await supaGet('select=*&order=data.desc', 'orient_obs') || [];
+    ortObsCache = {};
+    data.forEach(r => {
+      if(!ortObsCache[r.data]) ortObsCache[r.data] = {};
+      ortObsCache[r.data][r.pessoa] = {obs: r.obs||'', atraso_hora: r.atraso_hora||'', atraso_just: r.atraso_just||''};
+    });
+  } catch(e) { console.error('Erro orient_obs:', e.message); }
+}
+
+async function ortObsSave(pessoa, field, value) {
+  const data = todayKey;
+  if(!ortObsCache[data]) ortObsCache[data] = {};
+  if(!ortObsCache[data][pessoa]) ortObsCache[data][pessoa] = {obs:'', atraso_hora:'', atraso_just:''};
+  ortObsCache[data][pessoa][field] = value;
+
+  const rec = ortObsCache[data][pessoa];
+  try {
+    // Upsert via supabase
+    const res = await fetch(`${SUPA_URL}/rest/v1/orient_obs`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPA_KEY,
+        'Authorization': 'Bearer ' + SUPA_KEY,
+        'Content-Type': 'application/json',
+        'Prefer': 'resolution=merge-duplicates'
+      },
+      body: JSON.stringify({data, pessoa, obs: rec.obs, atraso_hora: rec.atraso_hora, atraso_just: rec.atraso_just})
+    });
+    if(!res.ok) throw new Error(await res.text());
+  } catch(e) { console.error('Erro ao salvar obs:', e.message); }
+}
+
+function renderOrtObs() {
+  const wrap = document.getElementById('ort-obs-list');
+  if(!wrap) return;
+  const dayObs = ortObsCache[todayKey] || {};
+
+  wrap.innerHTML = ORT_ALL_PESSOAS.map(p => {
+    const d = dayObs[p] || {obs:'', atraso_hora:'', atraso_just:''};
+    const temObs   = d.obs.trim();
+    const temAtraso = d.atraso_hora.trim();
+    const pid = p.replace(/[^a-z0-9]/gi,'_');
+
+    return `<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);
+                        margin-bottom:8px;overflow:hidden;box-shadow:var(--shadow)">
+      <!-- Header clicável -->
+      <div onclick="ortObsToggle('${pid}')"
+        style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;cursor:pointer;
+               background:${temObs||temAtraso?'var(--amber-bg)':'var(--surface)'};transition:background .15s"
+        onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background='${temObs||temAtraso?'var(--amber-bg)':'var(--surface)'}'">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:13px;font-weight:600">${p}</span>
+          ${temAtraso ? `<span style="font-size:11px;background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber);border-radius:10px;padding:1px 8px;font-weight:600">⏰ Atrasado ${d.atraso_hora}</span>` : ''}
+          ${temObs ? `<span style="font-size:11px;background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue);border-radius:10px;padding:1px 8px">📝 Obs</span>` : ''}
+        </div>
+        <span id="ort-obs-chev-${pid}" style="font-size:12px;color:var(--text3);transition:transform .2s">▼</span>
+      </div>
+      <!-- Corpo expansível -->
+      <div id="ort-obs-body-${pid}" style="display:none;padding:12px 16px;border-top:1px solid var(--border)">
+        <!-- Observações -->
+        <div style="margin-bottom:12px">
+          <label style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px">📝 Observações</label>
+          <textarea
+            style="width:100%;border:1px solid var(--border);border-radius:var(--radius);padding:8px 10px;font-size:13px;font-family:inherit;resize:vertical;min-height:60px;background:var(--bg);color:var(--text)"
+            placeholder="Registre observações sobre este orientador..."
+            onchange="ortObsSave('${p}','obs',this.value)"
+          >${d.obs}</textarea>
+        </div>
+        <!-- Atraso -->
+        <div style="display:grid;grid-template-columns:140px 1fr;gap:10px;align-items:start">
+          <div>
+            <label style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px">⏰ Hora de chegada</label>
+            <input type="time"
+              style="width:100%;border:1px solid var(--border);border-radius:var(--radius);padding:7px 10px;font-size:13px;background:var(--bg);color:var(--text)"
+              value="${d.atraso_hora}"
+              onchange="ortObsSave('${p}','atraso_hora',this.value)">
+          </div>
+          <div>
+            <label style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px">Justificativa do atraso</label>
+            <input type="text"
+              style="width:100%;border:1px solid var(--border);border-radius:var(--radius);padding:7px 10px;font-size:13px;background:var(--bg);color:var(--text)"
+              placeholder="Ex: Trânsito, consulta médica..."
+              value="${d.atraso_just}"
+              onchange="ortObsSave('${p}','atraso_just',this.value)">
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function ortObsToggle(pid) {
+  const body = document.getElementById('ort-obs-body-'+pid);
+  const chev = document.getElementById('ort-obs-chev-'+pid);
+  if(!body) return;
+  const open = body.style.display === 'none';
+  body.style.display = open ? 'block' : 'none';
+  if(chev) chev.style.transform = open ? 'rotate(180deg)' : '';
 }
 
 </script>
