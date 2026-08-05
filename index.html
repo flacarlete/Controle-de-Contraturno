@@ -669,221 +669,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 
   <div class="container">
     
-    <div class="tab-pane active" id="pane-chamada">
-
-      
-      <div class="at-sub-tabs" style="margin-bottom:1.25rem">
-        <button class="at-sub-tab active" id="nvst-chamada"   onclick="nvSubTab('chamada')">📋 Chamada</button>
-        <button class="at-sub-tab"        id="nvst-historico" onclick="nvSubTab('historico')">📅 Histórico</button>
-        <button class="at-sub-tab"        id="nvst-alertas"   onclick="nvSubTab('alertas')">🔔 Alertas</button>
-        <button class="at-sub-tab"        id="nvst-frequencia" onclick="nvSubTab('frequencia')">📊 Frequência</button>
-        <button class="at-sub-tab"        id="nvst-alunos"    onclick="nvSubTab('alunos')">👥 Alunos</button>
-        <button class="at-sub-tab"        id="nvst-relatorios" onclick="nvSubTab('relatorios')">📄 Relatórios</button>
-      </div>
-
-      
-      <div class="at-sub-pane active" id="nvpane-chamada">
-        <div class="stats-grid" id="stats-grid"></div>
-        <div class="disc-pills" id="disc-pills"></div>
-        <div class="disc-pills" id="serie-pills" style="display:none"></div>
-        <div class="card">
-          <div class="card-hdr">
-            <div>
-              <div class="card-title" id="chamada-disc-title">Selecione uma disciplina</div>
-              <div class="card-sub" id="chamada-disc-sub">—</div>
-            </div>
-            <div class="btn-group">
-              <button class="btn" style="background:transparent;border-color:transparent;color:var(--text3)" onclick="marcarTodos('P')">✓ Todos presentes</button>
-              <button class="btn" style="background:transparent;border-color:transparent;color:var(--text3)" onclick="marcarTodos('F')">✕ Todos faltaram</button>
-            </div>
-          </div>
-          <div class="card-body">
-            <div class="progress-wrap" id="progress-wrap" style="display:none">
-              <div class="progress-label"><span id="prog-label">0 presentes</span><span id="prog-pct">0%</span></div>
-              <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%;background:var(--accent-mid)"></div></div>
-            </div>
-            <div class="aluno-list" id="aluno-list">
-              <div class="empty"><span class="e-ico">📌</span><p>Selecione uma disciplina acima para iniciar a chamada</p></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      
-      <div class="at-sub-pane" id="nvpane-historico">
-        <div id="history-list"></div>
-      </div>
-
-      
-      <div class="at-sub-pane" id="nvpane-alertas">
-        <div class="card" style="margin-bottom:14px">
-          <div class="card-hdr">
-            <div><div class="card-title">🔔 Alertas de faltas</div><div class="card-sub">Alunos com 2 ou mais faltas — notificação pronta para WhatsApp</div></div>
-            <div class="filters" id="alerta-filters"></div>
-          </div>
-        </div>
-        <div id="alertas-list"></div>
-      </div>
-
-      
-      <div class="at-sub-pane" id="nvpane-frequencia">
-        <div class="card" style="margin-bottom:14px">
-          <div class="card-hdr">
-            <div><div class="card-title">📊 Frequência por aluno</div><div class="card-sub">Histórico completo de presença e faltas</div></div>
-          </div>
-          <div class="card-body" style="padding-bottom:8px">
-            <div class="filters" id="relatorio-filters"></div>
-          </div>
-        </div>
-        <div id="relatorio-list"></div>
-      </div>
-
-      
-      <div class="at-sub-pane" id="nvpane-alunos">
-        <div class="card">
-          <div class="card-hdr"><div class="card-title">👥 Gerenciar alunos e disciplinas</div></div>
-          <div class="card-body">
-            <div class="btn-group" style="margin-bottom:16px">
-              <button class="btn btn-green" onclick="openModalAluno()">+ Adicionar aluno</button>
-              <button class="btn" onclick="openModalDisc()">+ Nova disciplina</button>
-            </div>
-            <div id="gerenciar-list"></div>
-          </div>
-        </div>
-      </div>
-
-      
-      <div class="at-sub-pane" id="nvpane-relatorios">
-        <div class="rel-page">
-
-        
-        <div class="rel-config-card" id="emailjs-config-card">
-          <div class="rel-config-hdr">
-            <div>
-              <div class="rel-config-hdr-title">✉️ Configuração de E-mail (EmailJS)</div>
-            </div>
-            <span class="rel-config-status" id="emailjs-status-badge">⚠ Não configurado</span>
-          </div>
-          <div class="rel-config-body">
-            <div class="form-group" style="margin:0">
-              <label class="form-label">Service ID</label>
-              <input class="form-input" id="ejs-service" placeholder="Ex: service_abc123">
-            </div>
-            <div class="form-group" style="margin:0">
-              <label class="form-label">Template ID</label>
-              <input class="form-input" id="ejs-template" placeholder="Ex: template_xyz456">
-            </div>
-            <div class="form-group" style="margin:0">
-              <label class="form-label">Public Key</label>
-              <input class="form-input" id="ejs-pubkey" placeholder="Ex: user_ABCDEFGHIJ">
-            </div>
-            <div class="form-group" style="margin:0">
-              <label class="form-label">E-mails padrão (destinos)</label>
-              <input class="form-input" id="ejs-email" type="text" placeholder="Ex: coord@arena.edu.br, direcao@arena.edu.br">
-              <div style="font-size:11px;color:var(--text3);margin-top:4px">Separe múltiplos e-mails com vírgula</div>
-            </div>
-          </div>
-          <div style="padding:0 16px 16px;display:flex;gap:8px;align-items:center">
-            <button class="btn btn-green" onclick="salvarEmailConfig()">💾 Salvar configuração</button>
-            <a href="https://www.emailjs.com" target="_blank" style="font-size:12px;color:var(--accent)">Como configurar o EmailJS →</a>
-          </div>
-        </div>
-
-        
-        <div class="rel-section-title">📋 Nivelamento — Frequência</div>
-        <div class="rel-cards">
-          <div class="rel-card">
-            <div class="rel-card-icon">📊</div>
-            <div class="rel-card-title">Frequência por disciplina</div>
-            <div class="rel-card-sub">Resumo de presença e faltas de todos os alunos, organizado por disciplina.</div>
-            <div class="rel-card-actions">
-              <button class="rel-btn-pdf" onclick="gerarPDF('frequencia_disc')">📄 Gerar PDF</button>
-              <button class="rel-btn-email" onclick="enviarEmail('frequencia_disc')">✉️ Enviar</button>
-            </div>
-          </div>
-          <div class="rel-card">
-            <div class="rel-card-icon">🔔</div>
-            <div class="rel-card-title">Alertas de faltas</div>
-            <div class="rel-card-sub">Lista de alunos com 2 ou mais faltas no nivelamento, com contagem por disciplina.</div>
-            <div class="rel-card-actions">
-              <button class="rel-btn-pdf" onclick="gerarPDF('alertas_faltas')">📄 Gerar PDF</button>
-              <button class="rel-btn-email" onclick="enviarEmail('alertas_faltas')">✉️ Enviar</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="rel-section-title">⏰ Atrasos</div>
-        <div class="rel-cards">
-          <div class="rel-card">
-            <div class="rel-card-icon">📅</div>
-            <div class="rel-card-title">Atrasos de hoje</div>
-            <div class="rel-card-sub">Registro completo de atrasos do dia atual com horário, turma e justificativa.</div>
-            <div class="rel-card-actions">
-              <button class="rel-btn-pdf" onclick="gerarPDF('atrasos_hoje')">📄 Gerar PDF</button>
-              <button class="rel-btn-email" onclick="enviarEmail('atrasos_hoje')">✉️ Enviar</button>
-            </div>
-          </div>
-          <div class="rel-card">
-            <div class="rel-card-icon">⚠️</div>
-            <div class="rel-card-title">Alunos reincidentes</div>
-            <div class="rel-card-sub">Alunos com 2 ou mais atrasos registrados, com histórico de ocorrências.</div>
-            <div class="rel-card-actions">
-              <button class="rel-btn-pdf" onclick="gerarPDF('atrasos_reincid')">📄 Gerar PDF</button>
-              <button class="rel-btn-email" onclick="enviarEmail('atrasos_reincid')">✉️ Enviar</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="rel-section-title">👨‍🏫 Professores</div>
-        <div class="rel-cards">
-          <div class="rel-card">
-            <div class="rel-card-icon">📋</div>
-            <div class="rel-card-title">Controle de professores — Hoje</div>
-            <div class="rel-card-sub">Resumo de todos os checks de professores do dia: chegada, chamada, banheiro e saída.</div>
-            <div class="rel-card-actions">
-              <button class="rel-btn-pdf" onclick="gerarPDF('prof_hoje')">📄 Gerar PDF</button>
-              <button class="rel-btn-email" onclick="enviarEmail('prof_hoje')">✉️ Enviar</button>
-            </div>
-          </div>
-          <div class="rel-card">
-            <div class="rel-card-icon">📊</div>
-            <div class="rel-card-title">Ocorrências de professores</div>
-            <div class="rel-card-sub">Histórico de problemas registrados por professor, com contagem por critério.</div>
-            <div class="rel-card-actions">
-              <button class="rel-btn-pdf" onclick="gerarPDF('prof_ocorrencias')">📄 Gerar PDF</button>
-              <button class="rel-btn-email" onclick="enviarEmail('prof_ocorrencias')">✉️ Enviar</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="rel-section-title">📚 Sala de Estudos</div>
-        <div class="rel-cards">
-          <div class="rel-card">
-            <div class="rel-card-icon">📝</div>
-            <div class="rel-card-title">Relatórios de monitoria</div>
-            <div class="rel-card-sub">Todos os relatórios preenchidos da sala de estudos com indicadores e ocorrências.</div>
-            <div class="rel-card-actions">
-              <button class="rel-btn-pdf" onclick="gerarPDF('sala_estudos')">📄 Gerar PDF</button>
-              <button class="rel-btn-email" onclick="enviarEmail('sala_estudos')">✉️ Enviar</button>
-            </div>
-          </div>
-          <div class="rel-card">
-            <div class="rel-card-icon">🌟</div>
-            <div class="rel-card-title">Resumo geral</div>
-            <div class="rel-card-sub">Visão consolidada de frequência, atrasos e professores em um único relatório.</div>
-            <div class="rel-card-actions">
-              <button class="rel-btn-pdf" onclick="gerarPDF('resumo_geral')">📄 Gerar PDF</button>
-              <button class="rel-btn-email" onclick="enviarEmail('resumo_geral')">✉️ Enviar</button>
-            </div>
-          </div>
-        </div>
-
-      </div>
-      </div>
-
-    </div>
-
-    
     <div class="tab-pane" id="pane-atrasos">
 
       
@@ -1291,28 +1076,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         </div>
 
         
-        <div class="rel-section-title">📋 Nivelamento — Frequência</div>
-        <div class="rel-cards">
-          <div class="rel-card">
-            <div class="rel-card-icon">📊</div>
-            <div class="rel-card-title">Frequência por disciplina</div>
-            <div class="rel-card-sub">Resumo de presença e faltas de todos os alunos, organizado por disciplina.</div>
-            <div class="rel-card-actions">
-              <button class="rel-btn-pdf" onclick="gerarPDF('frequencia_disc')">📄 Gerar PDF</button>
-              <button class="rel-btn-email" onclick="enviarEmail('frequencia_disc')">✉️ Enviar</button>
-            </div>
-          </div>
-          <div class="rel-card">
-            <div class="rel-card-icon">🔔</div>
-            <div class="rel-card-title">Alertas de faltas</div>
-            <div class="rel-card-sub">Lista de alunos com 2 ou mais faltas no nivelamento, com contagem por disciplina.</div>
-            <div class="rel-card-actions">
-              <button class="rel-btn-pdf" onclick="gerarPDF('alertas_faltas')">📄 Gerar PDF</button>
-              <button class="rel-btn-email" onclick="enviarEmail('alertas_faltas')">✉️ Enviar</button>
-            </div>
-          </div>
-        </div>
-
         <div class="rel-section-title">⏰ Atrasos</div>
         <div class="rel-cards">
           <div class="rel-card">
@@ -1508,6 +1271,86 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
   </div>
 </div>
 
+    <!-- ══ RELATÓRIO DE ATENDIMENTO ══════════════════════════════ -->
+    <div class="tab-pane" id="pane-atendimento">
+      <div class="at-sub-tabs" style="margin-bottom:1.25rem">
+        <button class="at-sub-tab active" id="atend-tab-registro"   onclick="atendSubTab('registro')">📝 Registrar</button>
+        <button class="at-sub-tab"        id="atend-tab-historico"  onclick="atendSubTab('historico')">📋 Histórico</button>
+      </div>
+
+      <!-- Sub-pane: Registrar -->
+      <div class="at-sub-pane active" id="atend-pane-registro">
+        <div class="at-form-card">
+          <div class="at-form-hdr">📝 Novo Registro de Atendimento</div>
+          <div class="at-form-body">
+            <div class="form-group" style="margin:0">
+              <label class="form-label">Data</label>
+              <input class="form-input" type="date" id="atend-data">
+            </div>
+            <div class="form-group" style="margin:0">
+              <label class="form-label">Tema</label>
+              <select class="form-select" id="atend-tema">
+                <option value="academico">Acadêmico</option>
+                <option value="disciplinar">Disciplinar</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group" style="margin:0 0 12px 0;padding:0 18px">
+            <label class="form-label">Aluno</label>
+            <div style="position:relative">
+              <input class="form-input" id="atend-aluno-input" placeholder="Buscar aluno por nome..."
+                autocomplete="off" oninput="atendBuscarAluno(this.value)">
+              <div id="atend-aluno-sugest"
+                style="position:absolute;top:100%;left:0;right:0;z-index:50;background:var(--surface);
+                       border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;
+                       max-height:200px;overflow-y:auto;display:none"></div>
+            </div>
+            <div id="atend-aluno-info" style="margin-top:4px;font-size:12px;color:var(--text3)"></div>
+          </div>
+          <div class="form-group" style="margin:0;padding:0 18px 16px">
+            <label class="form-label">Relato / Observações</label>
+            <textarea class="form-textarea" id="atend-relato" rows="5"
+              placeholder="Descreva o atendimento, ocorrência ou observação relevante..."></textarea>
+          </div>
+          <div style="padding:0 18px 18px;display:flex;gap:8px;align-items:center">
+            <button class="btn btn-green" onclick="atendRegistrar()" style="height:38px;padding:0 20px">✓ Registrar atendimento</button>
+            <span id="atend-status" style="font-size:12px;color:var(--text3)"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sub-pane: Histórico -->
+      <div class="at-sub-pane" id="atend-pane-historico">
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:1rem;align-items:flex-end">
+          <div class="form-group" style="margin:0;min-width:160px">
+            <label class="form-label">Buscar aluno</label>
+            <input class="form-input" id="atend-hist-aluno" placeholder="Nome do aluno..."
+              oninput="atendRenderHistorico()">
+          </div>
+          <div class="form-group" style="margin:0">
+            <label class="form-label">Tema</label>
+            <select class="form-select" id="atend-hist-tema" onchange="atendRenderHistorico()">
+              <option value="">Todos</option>
+              <option value="academico">Acadêmico</option>
+              <option value="disciplinar">Disciplinar</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin:0">
+            <label class="form-label">Período</label>
+            <select class="form-select" id="atend-hist-periodo" onchange="atendRenderHistorico()">
+              <option value="30">Últimos 30 dias</option>
+              <option value="90">Últimos 3 meses</option>
+              <option value="365">Último ano</option>
+              <option value="0">Todos</option>
+            </select>
+          </div>
+          <button class="btn" onclick="atendLimparFiltros()" style="height:38px">Limpar filtros</button>
+        </div>
+        <div id="atend-hist-stats" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:1rem"></div>
+        <div id="atend-hist-lista"></div>
+      </div>
+    </div>
+
 <div class="modal-overlay" id="modal-aluno">
   <div class="modal">
     <div class="modal-hdr"><h3 id="modal-aluno-title">Adicionar aluno</h3><button class="modal-close" onclick="closeModal('modal-aluno')">✕</button></div>
@@ -1555,10 +1398,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 const DEFAULT_USERS = [
   {id:'u1', login:'admin',    name:'Flávia Mota',   role:'admin',   pwd:'arena2026',   tabs:null},
   {id:'u2', login:'coord',    name:'Coordenação',   role:'coord',   pwd:'coord2026',   tabs:null},
-  {id:'u3', login:'danilo',   name:'Danilo',        role:'orient',  pwd:'orient2026',  tabs:['chamada','atrasos']},
-  {id:'u4', login:'renan',    name:'Renan',         role:'orient',  pwd:'orient2026',  tabs:['chamada','atrasos']},
-  {id:'u5', login:'tamires',  name:'Tamires',       role:'orient',  pwd:'orient2026',  tabs:['chamada','atrasos']},
-  {id:'u6', login:'beatriz',  name:'Beatriz',       role:'orient',  pwd:'orient2026',  tabs:['chamada','atrasos']},
+  {id:'u3', login:'danilo',   name:'Danilo',        role:'orient',  pwd:'orient2026',  tabs:['atrasos','atrasos_mat','pesquisa','modalidades','atendimento']},
+  {id:'u4', login:'renan',    name:'Renan',         role:'orient',  pwd:'orient2026',  tabs:['atrasos','atrasos_mat','pesquisa','modalidades','atendimento']},
+  {id:'u5', login:'tamires',  name:'Tamires',       role:'orient',  pwd:'orient2026',  tabs:['atrasos','atrasos_mat','pesquisa','modalidades','atendimento']},
+  {id:'u6', login:'beatriz',  name:'Beatriz',       role:'orient',  pwd:'orient2026',  tabs:['atrasos','atrasos_mat','pesquisa','modalidades','atendimento']},
   {id:'u7', login:'monitor',  name:'Monitor Sala',  role:'monitor', pwd:'monitor2026', tabs:['sala']},
 ];
 
@@ -1568,9 +1411,9 @@ const ROLE_COLORS  = {admin:'role-admin', coord:'role-coord', orient:'role-orien
 // Tabs disponíveis por perfil
 // Fallback quando user.tabs === null (admin e coord têm acesso total)
 const TABS_BY_ROLE = {
-  admin:   ['chamada','atrasos','atrasos_mat','sala','professores','orientadores','pesquisa','modalidades','admin'],
-  coord:   ['chamada','atrasos','atrasos_mat','sala','professores','orientadores','pesquisa','modalidades'],
-  orient:  ['chamada','atrasos','atrasos_mat','pesquisa','modalidades'],
+  admin:   ['atrasos','atrasos_mat','sala','professores','orientadores','pesquisa','modalidades','atendimento','admin'],
+  coord:   ['atrasos','atrasos_mat','sala','professores','orientadores','pesquisa','modalidades','atendimento'],
+  orient:  ['atrasos','atrasos_mat','pesquisa','modalidades','atendimento'],
   monitor: ['sala','pesquisa','modalidades'],
 };
 // Retorna as abas do usuário (tabs custom ou fallback por role)
@@ -1578,11 +1421,10 @@ function getUserTabs(user) {
   // admin e coord sempre têm acesso total (TABS_BY_ROLE), ignorando tabs salvas
   if (user.role === 'admin' || user.role === 'coord') return TABS_BY_ROLE[user.role];
   if (user.tabs && user.tabs.length > 0) return user.tabs;
-  return TABS_BY_ROLE[user.role] || ['chamada'];
+  return TABS_BY_ROLE[user.role] || ['atrasos'];
 }
 
 const TAB_DEFS = [
-  {id:'chamada',     icon:'📋', label:'Nivelamento'},
   {id:'atrasos',     icon:'⏰', label:'Atrasos Vespertino'},
   {id:'atrasos_mat',  icon:'🌅', label:'Atrasos Matutino'},
   {id:'sala',        icon:'📚', label:'Sala de Estudos'},
@@ -1591,6 +1433,7 @@ const TAB_DEFS = [
   {id:'admin',       icon:'⚙️', label:'Admin'},
   {id:'pesquisa',    icon:'🔍', label:'Pesquisa'},
   {id:'modalidades',  icon:'🏅', label:'Modalidades'},
+  {id:'atendimento',  icon:'📝', label:'Atendimento'},
 ];
 
 // Cache local de usuários (carregado do Supabase no boot)
@@ -1678,7 +1521,6 @@ function launchApp() {
   document.getElementById('user-name').textContent   = currentUser.name;
   document.getElementById('user-role-label').textContent = ROLE_LABELS[currentUser.role]||currentUser.role;
   buildTabs();
-  init(); // inicia nivelamento
 }
 
 function buildTabs() {
@@ -1713,7 +1555,6 @@ function showPane(id) {
   if(id==='gerenciar') renderGerenciar();
   if(id==='admin')     renderAdmin();
   if(id==='sala')      initSala();
-  if(id==='chamada')   nvSubTab('chamada');
   if(id==='atrasos')   initAtrasos();
   if(id==='atrasos_mat')   initAtrasosMat();
   if(id==='orientadores') initOrientadores();
@@ -1721,6 +1562,7 @@ function showPane(id) {
   if(id==='relatorios')  initRelatorios();
   if(id==='pesquisa')    { document.getElementById('pesq-input')?.focus(); }
   if(id==='modalidades') initModalidades();
+  if(id==='atendimento') initAtendimento();
 }
 
 // ══ ADMIN ════════════════════════════════════════════════
@@ -1728,7 +1570,6 @@ let editingUserId = null;
 
 // Todas as abas disponíveis para escolha
 const ALL_TABS_OPTIONS_ADM = [
-  {id:'chamada',     label:'📋 Nivelamento'},
   {id:'atrasos',     label:'⏰ Atrasos Vespertino'},
   {id:'atrasos_mat', label:'🌅 Atrasos Matutino'},
   {id:'sala',        label:'📚 Sala de Estudos'},
@@ -1867,831 +1708,6 @@ function showToast(msg, duration=2500) {
 }
 
 // ══ NIVELAMENTO DATA ════════════════════════════════════
-const TURMAS_NIV = [
-  {id:"t1",disc:"MATEMÁTICA 01",dia:"Terça Feira",diaN:2,horario:"14h15 às 15h00",alunos:["MARIANA SILVA CASTRO","MARIA LUISA MEIRELLES GRASSMANN","GUILHERME HENRIQUE DE MACEDO SAFATLE"]},
-  {id:"t2",disc:"MATEMÁTICA 01",dia:"Terça Feira",diaN:2,horario:"15h00 às 15h45",alunos:["ANNA LIZ RODRIGUES LOPES","CECÍLIA MACHADO RESENDE","CECÍLIA VIEIRA DE LIMA SANTANA","EVA CUNHA DUARTE","LUISA MARQUES CARDOSO","ISABELA ARANTES GONÇALEZ"]},
-  {id:"t3",disc:"MATEMÁTICA 01",dia:"Segunda Feira",diaN:1,horario:"16h10 às 16h55",alunos:["MANUELA LOBO GONZAGA","CAROLLINE GONÇALVES DOS SANTOS","LUÍSA DE CASTRO BERNARDO"]},
-  {id:"t4",disc:"MATEMÁTICA 01",dia:"Segunda Feira",diaN:1,horario:"16h55 às 17h40",alunos:["ANNELISE SIGNATES","ARTHUR VINICIUS TRESSOLDI","CAROLINA FARIA GODINHO","PEDRO SPINDOLA CARNEIRO","VALENTINA MOURA DE ALMEIDA","VALENTINA OLIVEIRA MARTINS","STELLA ARANTES BICALHO"]},
-  {id:"t5",disc:"MATEMÁTICA 02",dia:"Quarta Feira",diaN:3,horario:"14h15 às 15h00",alunos:["MARINA AYRES ROLDÃO"]},
-  {id:"t6",disc:"MATEMÁTICA 02",dia:"Sexta Feira",diaN:5,horario:"14h15 às 15h00",alunos:["MARIANA SILVA CASTRO"]},
-  {id:"t7",disc:"MATEMÁTICA 02",dia:"Quarta Feira",diaN:3,horario:"15h00 às 15h45",alunos:["ANNA LIZ RODRIGUES LOPES","ANTÔNIO CAMPOS MACEDO","CECÍLIA CHAVES RAUH","CECÍLIA MACHADO RESENDE","ELISA FERREIRA LAPOT","ISRAEL ANTONIO RIBEIRO FILHO","LUIZ HENRIQUE LEAL ROSA","JÚLIA LIMA SANTOS","GABRIEL CORREIA FERNANDES","STELLA ARAUJO PINTO BERNARDES DE PAIVA","ISADORA RIBEIRO MARTINS MAGNO"]},
-  {id:"t8",disc:"MATEMÁTICA 02",dia:"Sexta Feira",diaN:5,horario:"15h00 às 15h45",alunos:["EVA CUNHA DUARTE","LUIZ HENRIQUE LEAL ROSA","MARIA PAULA RODRIGUES DE CASTRO","LUISA FARIA LOULY CAIXE","LEONORA RASSI MAFRA","VALENTINA GUERRA VELASCO","SOPHIA CAMPOS LIMA"]},
-  {id:"t9",disc:"MATEMÁTICA 02",dia:"Terça Feira",diaN:2,horario:"16h10 às 16h55",alunos:["MARIA LUISA PRADO LOURENÇO","MARIANA MENEZES RABUSKE","RAFAELA CANEDO CUNHA","HEITOR CHAUD DO PRADO","VITTÓRIA MOTA CAETANO DE CARVALHO","CAROLLINE GONÇALVES DOS SANTOS","PEDRO VIANA FAISANO FLEURY"]},
-  {id:"t10",disc:"MATEMÁTICA 02",dia:"Terça Feira",diaN:2,horario:"16h55 às 17h40",alunos:["PEDRO SPINDOLA CARNEIRO","ESTELA GOMES FLEURY","TÚLIO MEIRELES RODRIGUES","STELLA ARANTES BICALHO"]},
-  {id:"t11",disc:"GRAMÁTICA 01",dia:"Terça Feira",diaN:2,horario:"15h00 às 15h45",alunos:["ESTEVÃO ALVES LIMA"]},
-  {id:"t12",disc:"GRAMÁTICA 01",dia:"Segunda Feira",diaN:1,horario:"14h15 às 15h00",alunos:["VALENTINA ARRUDA SAADO"]},
-  {id:"t13",disc:"GRAMÁTICA 01",dia:"Terça Feira",diaN:2,horario:"14h15 às 15h00",alunos:["ANNA LIZ RODRIGUES LOPES","CECÍLIA MACHADO RESENDE","ELISA FERREIRA LAPOT","ISABELA ARANTES GONÇALEZ","ESTELA COSTA BARRETO"]},
-  {id:"t14",disc:"GRAMÁTICA 01",dia:"Segunda Feira",diaN:1,horario:"16h55 às 17h40",alunos:["MANUELA LOBO GONZAGA","JOÃO GUILHERME SOUSA MAIA"]},
-  {id:"t15",disc:"GRAMÁTICA 01",dia:"Segunda Feira",diaN:1,horario:"16h10 às 16h55",alunos:["CAROLINA FARIA GODINHO","TÚLIO MEIRELES RODRIGUES","OTÁVIO CRISTÓFOLI LEÃO"]},
-  {id:"t16",disc:"INGLÊS",dia:"Quarta Feira",diaN:3,horario:"16h10 às 16h55",alunos:["ANTÔNIO CASTINEIRAS BEZERRIL"]},
-  {id:"t17",disc:"INGLÊS",dia:"Terça Feira",diaN:2,horario:"15h00 às 15h45",alunos:["ELISA FERREIRA LAPOT","LORENZZO MIGUEL LOPES AQUINO MACHADO","GABRIEL CORREIA FERNANDES","VALENTINA GUERRA VELASCO","STELLA ARAÚJO PINTO BERNARDES DE PAIVA","ESTELA COSTA BARRETO","MARIA PAULA RODRIGUES DE CASTRO"]},
-  {id:"t18",disc:"INGLÊS",dia:"Quarta Feira",diaN:3,horario:"15h00 às 15h45",alunos:["ANTÔNIO CAMPOS MACEDO","ANNA LIZ RODRIGUES LOPES","CECÍLIA MACHADO RESENDE","DAVI SOARES FERNANDES","PEDRO HENRIQUE BRASILEIRO MACHADO","ISADORA RIBEIRO MARTINS MAGNO"]},
-  {id:"t19",disc:"INGLÊS",dia:"Terça Feira",diaN:2,horario:"16h10 às 16h55",alunos:["VICTOR HUGO ALVES ZAFRED"]},
-  {id:"t20",disc:"INGLÊS",dia:"Quarta Feira",diaN:3,horario:"14h15 às 15h00",alunos:["MANUELA LOBO GONZAGA"]},
-  {id:"t21",disc:"INGLÊS",dia:"Quarta Feira",diaN:3,horario:"16h55 às 17h40",alunos:["ARTHUR VINICIUS TRESSOLDI","JOSÉ PAULO ZUBEID IVO","PEDRO HENRIQUE FERNANDES SILVA"]},
-  {id:"t22",disc:"REDAÇÃO 01",dia:"",diaN:6,horario:"sem horário",alunos:["ANTÔNIO CAMPOS MACEDO","BENÍCIO SILVA DINIZ","CECÍLIA MACHADO RESENDE","CECÍLIA VIEIRA DE LIMA SANTANA","JOSE AUGUSTO QUEIROZ DE AGUIAR NETO","ANGELINA BRUNO ROCHA","PEDRO HENRIQUE BRASILEIRO MACHADO","ISADORA RIBEIRO MARTINS MAGNO"]},
-  {id:"t23",disc:"REDAÇÃO 01",dia:"Quarta Feira",diaN:3,horario:"14h15 às 18h25",alunos:["TÚLIO MEIRELES RODRIGUES","OTÁVIO CRISTÓFOLI LEÃO"]}
-];
-
-const GRUPOS_NIV = [
-  {id:"MATEMÁTICA_01_Segunda_Feira",disc:"MATEMÁTICA 01",dia:"Segunda Feira",diaN:1,label:"MATEMÁTICA 01 (Segunda)",total:10,turmas:["t3","t4"]},
-  {id:"MATEMÁTICA_01_Terça_Feira",disc:"MATEMÁTICA 01",dia:"Terça Feira",diaN:2,label:"MATEMÁTICA 01 (Terça)",total:9,turmas:["t1","t2"]},
-  {id:"MATEMÁTICA_02_Terça_Feira",disc:"MATEMÁTICA 02",dia:"Terça Feira",diaN:2,label:"MATEMÁTICA 02 (Terça)",total:11,turmas:["t9","t10"]},
-  {id:"MATEMÁTICA_02_Quarta_Feira",disc:"MATEMÁTICA 02",dia:"Quarta Feira",diaN:3,label:"MATEMÁTICA 02 (Quarta)",total:12,turmas:["t5","t7"]},
-  {id:"MATEMÁTICA_02_Sexta_Feira",disc:"MATEMÁTICA 02",dia:"Sexta Feira",diaN:5,label:"MATEMÁTICA 02 (Sexta)",total:8,turmas:["t6","t8"]},
-  {id:"GRAMÁTICA_01_Segunda_Feira",disc:"GRAMÁTICA 01",dia:"Segunda Feira",diaN:1,label:"GRAMÁTICA 01 (Segunda)",total:6,turmas:["t12","t14","t15"]},
-  {id:"GRAMÁTICA_01_Terça_Feira",disc:"GRAMÁTICA 01",dia:"Terça Feira",diaN:2,label:"GRAMÁTICA 01 (Terça)",total:6,turmas:["t11","t13"]},
-  {id:"INGLÊS_Terça_Feira",disc:"INGLÊS",dia:"Terça Feira",diaN:2,label:"INGLÊS (Terça)",total:8,turmas:["t17","t19"]},
-  {id:"INGLÊS_Quarta_Feira",disc:"INGLÊS",dia:"Quarta Feira",diaN:3,label:"INGLÊS (Quarta)",total:11,turmas:["t16","t18","t20","t21"]},
-  {id:"REDAÇÃO_01_Quarta_Feira",disc:"REDAÇÃO 01",dia:"Quarta Feira",diaN:3,label:"REDAÇÃO 01 (Quarta)",total:2,turmas:["t23"]},
-  {id:"REDAÇÃO_01_",disc:"REDAÇÃO 01",dia:"",diaN:6,label:"REDAÇÃO 01",total:8,turmas:["t22"]}
-];
-
-const DADOS_INICIAIS = {
-  disciplinas: ["MATEMÁTICA 01", "MATEMÁTICA 02", "GRAMÁTICA 01", "INGLÊS", "REDAÇÃO 01"],
-  alunos: [{"id": "a1", "nome": "ANNA LIZ RODRIGUES LOPES", "turma": "7º C", "disc": "MATEMÁTICA 01", "tel": ""}, {"id": "a2", "nome": "ANNELISE SIGNATES", "turma": "9º C", "disc": "MATEMÁTICA 01", "tel": ""}, {"id": "a3", "nome": "ARTHUR VINICIUS TRESSOLDI", "turma": "9º F", "disc": "MATEMÁTICA 01", "tel": ""}, {"id": "a4", "nome": "CAROLINA FARIA GODINHO", "turma": "9º C", "disc": "MATEMÁTICA 01", "tel": ""}, {"id": "a5", "nome": "CAROLLINE GONÇALVES DOS SANTOS", "turma": "8º A", "disc": "MATEMÁTICA 01", "tel": ""}, {"id": "a6", "nome": "CECÍLIA MACHADO RESENDE", "turma": "7º C", "disc": "MATEMÁTICA 01", "tel": ""}, {"id": "a7", "nome": "CECÍLIA VIEIRA DE LIMA SANTANA", "turma": "7º H", "disc": "MATEMÁTICA 01", "tel": ""}, {"id": "a8", "nome": "EVA CUNHA DUARTE", "turma": "7º H", "disc": "MATEMÁTICA 01", "tel": ""}, {"id": "a9", "nome": "GUILHERME HENRIQUE DE MACEDO SAFATLE", "turma": "6º C", "disc": "MATEMÁTICA 01", "tel": ""}, {"id": "a10", "nome": "ISABELA ARANTES GONÇALEZ", "turma": "7º H", "disc": "MATEMÁTICA 01", "tel": ""}, {"id": "a11", "nome": "LUISA MARQUES CARDOSO", "turma": "7º H", "disc": "MATEMÁTICA 01", "tel": ""}, {"id": "a12", "nome": "LUÍSA DE CASTRO BERNARDO", "turma": "8º D", "disc": "MATEMÁTICA 01", "tel": ""}, {"id": "a13", "nome": "MANUELA LOBO GONZAGA", "turma": "8º C", "disc": "MATEMÁTICA 01", "tel": ""}, {"id": "a14", "nome": "MARIA LUISA MEIRELLES GRASSMANN", "turma": "6º E", "disc": "MATEMÁTICA 01", "tel": ""}, {"id": "a15", "nome": "MARIANA SILVA CASTRO", "turma": "6º A", "disc": "MATEMÁTICA 01", "tel": ""}, {"id": "a16", "nome": "PEDRO SPINDOLA CARNEIRO", "turma": "9º A", "disc": "MATEMÁTICA 01", "tel": ""}, {"id": "a17", "nome": "STELLA ARANTES BICALHO", "turma": "9º B", "disc": "MATEMÁTICA 01", "tel": ""}, {"id": "a18", "nome": "VALENTINA MOURA DE ALMEIDA", "turma": "9º C", "disc": "MATEMÁTICA 01", "tel": ""}, {"id": "a19", "nome": "VALENTINA OLIVEIRA MARTINS", "turma": "9º A", "disc": "MATEMÁTICA 01", "tel": ""}, {"id": "a20", "nome": "ANNA LIZ RODRIGUES LOPES", "turma": "7º C", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a21", "nome": "ANTÔNIO CAMPOS MACEDO", "turma": "7º F", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a22", "nome": "CAROLLINE GONÇALVES DOS SANTOS", "turma": "8º A", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a23", "nome": "CECÍLIA CHAVES RAUH", "turma": "7º A", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a24", "nome": "CECÍLIA MACHADO RESENDE", "turma": "7º C", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a25", "nome": "ELISA FERREIRA LAPOT", "turma": "7º C", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a26", "nome": "ESTELA GOMES FLEURY", "turma": "9º D", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a27", "nome": "EVA CUNHA DUARTE", "turma": "7º H", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a28", "nome": "GABRIEL CORREIA FERNANDES", "turma": "7º A", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a29", "nome": "HEITOR CHAUD DO PRADO", "turma": "8º D", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a30", "nome": "ISADORA RIBEIRO MARTINS MAGNO", "turma": "7º C", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a31", "nome": "ISRAEL ANTONIO RIBEIRO FILHO", "turma": "7º C", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a32", "nome": "JÚLIA LIMA SANTOS", "turma": "7º A", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a33", "nome": "LEONORA RASSI MAFRA", "turma": "7º B", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a34", "nome": "LUISA FARIA LOULY CAIXE", "turma": "7º E", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a35", "nome": "LUIZ HENRIQUE LEAL ROSA", "turma": "7º G", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a36", "nome": "MARIA LUISA PRADO LOURENÇO", "turma": "8º F", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a37", "nome": "MARIA PAULA RODRIGUES DE CASTRO", "turma": "7º A", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a38", "nome": "MARIANA MENEZES RABUSKE", "turma": "8º H", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a39", "nome": "MARIANA SILVA CASTRO", "turma": "6º A", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a40", "nome": "MARINA AYRES ROLDÃO", "turma": "6º E", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a41", "nome": "PEDRO SPINDOLA CARNEIRO", "turma": "9º A", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a42", "nome": "PEDRO VIANA FAISANO FLEURY", "turma": "8º C", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a43", "nome": "RAFAELA CANEDO CUNHA", "turma": "8º E", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a44", "nome": "SOPHIA CAMPOS LIMA", "turma": "7º A", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a45", "nome": "STELLA ARANTES BICALHO", "turma": "9º B", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a46", "nome": "STELLA ARAUJO PINTO BERNARDES DE PAIVA", "turma": "7º A", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a47", "nome": "TÚLIO MEIRELES RODRIGUES", "turma": "9º E", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a48", "nome": "VALENTINA GUERRA VELASCO", "turma": "7º A", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a49", "nome": "VITTÓRIA MOTA CAETANO DE CARVALHO", "turma": "8º G", "disc": "MATEMÁTICA 02", "tel": ""}, {"id": "a50", "nome": "ANNA LIZ RODRIGUES LOPES", "turma": "7º C", "disc": "GRAMÁTICA 01", "tel": ""}, {"id": "a51", "nome": "CAROLINA FARIA GODINHO", "turma": "9º C", "disc": "GRAMÁTICA 01", "tel": ""}, {"id": "a52", "nome": "CECÍLIA MACHADO RESENDE", "turma": "7º C", "disc": "GRAMÁTICA 01", "tel": ""}, {"id": "a53", "nome": "ELISA FERREIRA LAPOT", "turma": "7º C", "disc": "GRAMÁTICA 01", "tel": ""}, {"id": "a54", "nome": "ESTELA COSTA BARRETO", "turma": "7º A", "disc": "GRAMÁTICA 01", "tel": ""}, {"id": "a55", "nome": "ESTEVÃO ALVES LIMA", "turma": "6º D", "disc": "GRAMÁTICA 01", "tel": ""}, {"id": "a56", "nome": "ISABELA ARANTES GONÇALEZ", "turma": "7º H", "disc": "GRAMÁTICA 01", "tel": ""}, {"id": "a57", "nome": "JOÃO GUILHERME SOUSA MAIA", "turma": "8º H", "disc": "GRAMÁTICA 01", "tel": ""}, {"id": "a58", "nome": "MANUELA LOBO GONZAGA", "turma": "8º C", "disc": "GRAMÁTICA 01", "tel": ""}, {"id": "a59", "nome": "OTÁVIO CRISTÓFOLI LEÃO", "turma": "9º C", "disc": "GRAMÁTICA 01", "tel": ""}, {"id": "a60", "nome": "TÚLIO MEIRELES RODRIGUES", "turma": "9º E", "disc": "GRAMÁTICA 01", "tel": ""}, {"id": "a61", "nome": "VALENTINA ARRUDA SAADO", "turma": "7º C", "disc": "GRAMÁTICA 01", "tel": ""}, {"id": "a62", "nome": "ANNA LIZ RODRIGUES LOPES", "turma": "7º C", "disc": "INGLÊS", "tel": ""}, {"id": "a63", "nome": "ANTÔNIO CAMPOS MACEDO", "turma": "7º F", "disc": "INGLÊS", "tel": ""}, {"id": "a64", "nome": "ANTÔNIO CASTINEIRAS BEZERRIL", "turma": "6º A", "disc": "INGLÊS", "tel": ""}, {"id": "a65", "nome": "ARTHUR VINICIUS TRESSOLDI", "turma": "9º F", "disc": "INGLÊS", "tel": ""}, {"id": "a66", "nome": "CECÍLIA MACHADO RESENDE", "turma": "7º C", "disc": "INGLÊS", "tel": ""}, {"id": "a67", "nome": "DAVI SOARES FERNANDES", "turma": "7º H", "disc": "INGLÊS", "tel": ""}, {"id": "a68", "nome": "ELISA FERREIRA LAPOT", "turma": "7º C", "disc": "INGLÊS", "tel": ""}, {"id": "a69", "nome": "ESTELA COSTA BARRETO", "turma": "7º A", "disc": "INGLÊS", "tel": ""}, {"id": "a70", "nome": "GABRIEL CORREIA FERNANDES", "turma": "7º A", "disc": "INGLÊS", "tel": ""}, {"id": "a71", "nome": "ISADORA RIBEIRO MARTINS MAGNO", "turma": "7º C", "disc": "INGLÊS", "tel": ""}, {"id": "a72", "nome": "JOSÉ PAULO ZUBEID IVO", "turma": "9º A", "disc": "INGLÊS", "tel": ""}, {"id": "a73", "nome": "LORENZZO MIGUEL LOPES AQUINO MACHADO", "turma": "7º B", "disc": "INGLÊS", "tel": ""}, {"id": "a74", "nome": "MANUELA LOBO GONZAGA", "turma": "8º C", "disc": "INGLÊS", "tel": ""}, {"id": "a75", "nome": "MARIA PAULA RODRIGUES DE CASTRO", "turma": "7º A", "disc": "INGLÊS", "tel": ""}, {"id": "a76", "nome": "PEDRO HENRIQUE BRASILEIRO MACHADO", "turma": "7º A", "disc": "INGLÊS", "tel": ""}, {"id": "a77", "nome": "PEDRO HENRIQUE FERNANDES SILVA", "turma": "9º E", "disc": "INGLÊS", "tel": ""}, {"id": "a78", "nome": "STELLA ARAÚJO PINTO BERNARDES DE PAIVA", "turma": "7º A", "disc": "INGLÊS", "tel": ""}, {"id": "a79", "nome": "VALENTINA GUERRA VELASCO", "turma": "7º A", "disc": "INGLÊS", "tel": ""}, {"id": "a80", "nome": "VICTOR HUGO ALVES ZAFRED", "turma": "8º C", "disc": "INGLÊS", "tel": ""}, {"id": "a81", "nome": "ANGELINA BRUNO ROCHA", "turma": "7º E", "disc": "REDAÇÃO 01", "tel": ""}, {"id": "a82", "nome": "ANTÔNIO CAMPOS MACEDO", "turma": "7º F", "disc": "REDAÇÃO 01", "tel": ""}, {"id": "a83", "nome": "BENÍCIO SILVA DINIZ", "turma": "7º C", "disc": "REDAÇÃO 01", "tel": ""}, {"id": "a84", "nome": "CECÍLIA MACHADO RESENDE", "turma": "7º C", "disc": "REDAÇÃO 01", "tel": ""}, {"id": "a85", "nome": "CECÍLIA VIEIRA DE LIMA SANTANA", "turma": "7º H", "disc": "REDAÇÃO 01", "tel": ""}, {"id": "a86", "nome": "ISADORA RIBEIRO MARTINS MAGNO", "turma": "7º C", "disc": "REDAÇÃO 01", "tel": ""}, {"id": "a87", "nome": "JOSE AUGUSTO QUEIROZ DE AGUIAR NETO", "turma": "7º H", "disc": "REDAÇÃO 01", "tel": ""}, {"id": "a88", "nome": "OTÁVIO CRISTÓFOLI LEÃO", "turma": "9º C", "disc": "REDAÇÃO 01", "tel": ""}, {"id": "a89", "nome": "PEDRO HENRIQUE BRASILEIRO MACHADO", "turma": "7º A", "disc": "REDAÇÃO 01", "tel": ""}, {"id": "a90", "nome": "TÚLIO MEIRELES RODRIGUES", "turma": "9º E", "disc": "REDAÇÃO 01", "tel": ""}],
-  frequencia: {}
-};
-
-// ══ SUPABASE + CACHE ════════════════════════════════════
-// ═══════════════════════════════════════
-// SUPABASE — REST API direta (sem SDK)
-// ═══════════════════════════════════════
-const SUPA_URL = 'https://elimvidualutiifnolxy.supabase.co';
-const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVsaW12aWR1YWx1dGlpZm5vbHh5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzMjY2NzAsImV4cCI6MjA5NTkwMjY3MH0.90hMsFqCaP3ovXlwhxmpChHT6W6qF-xIVzyiokDlMbA';
-
-const SUPA_HEADERS = {
-  'apikey': SUPA_KEY,
-  'Authorization': 'Bearer ' + SUPA_KEY,
-  'Content-Type': 'application/json',
-  'Prefer': 'return=minimal'
-};
-
-async function supaGet(params = '', table = 'frequencia') {
-  const res = await fetch(`${SUPA_URL}/rest/v1/${table}?${params}`, {
-    headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY }
-  });
-  if (!res.ok) throw new Error(await res.text());
-  return res.json();
-}
-
-async function supaUpsert(rows, table = 'frequencia') {
-  const res = await fetch(`${SUPA_URL}/rest/v1/${table}`, {
-    method: 'POST',
-    headers: { ...SUPA_HEADERS, 'Prefer': 'resolution=merge-duplicates' },
-    body: JSON.stringify(Array.isArray(rows) ? rows : [rows])
-  });
-  if (!res.ok) throw new Error(await res.text());
-}
-
-async function supaInsert(table, row) {
-  const res = await fetch(`${SUPA_URL}/rest/v1/${table}`, {
-    method: 'POST',
-    headers: { ...SUPA_HEADERS, 'Prefer': 'return=representation' },
-    body: JSON.stringify(row)
-  });
-  if (!res.ok) throw new Error(await res.text());
-  return res.json();
-}
-
-async function supaUpdate(table, id, data) {
-  const res = await fetch(`${SUPA_URL}/rest/v1/${table}?id=eq.${id}`, {
-    method: 'PATCH',
-    headers: { ...SUPA_HEADERS, 'Prefer': 'return=representation' },
-    body: JSON.stringify(data)
-  });
-  if (!res.ok) throw new Error(await res.text());
-  return res.json();
-}
-
-async function supaDeleteRow(table, id) {
-  const res = await fetch(`${SUPA_URL}/rest/v1/${table}?id=eq.${id}`, {
-    method: 'DELETE',
-    headers: SUPA_HEADERS
-  });
-  if (!res.ok) throw new Error(await res.text());
-}
-
-async function supaDelete(alunoId, data) {
-  const res = await fetch(
-    `${SUPA_URL}/rest/v1/frequencia?aluno_id=eq.${encodeURIComponent(alunoId)}&data=eq.${data}`,
-    { method: 'DELETE', headers: SUPA_HEADERS }
-  );
-  if (!res.ok) throw new Error(await res.text());
-}
-
-async function supaDeleteDia(data) {
-  const res = await fetch(
-    `${SUPA_URL}/rest/v1/frequencia?data=eq.${data}`,
-    { method: 'DELETE', headers: SUPA_HEADERS }
-  );
-  if (!res.ok) throw new Error(await res.text());
-}
-
-// Cache local da frequência
-let _freqCache    = {}; // { aluno_id: "P"|"F" } — dia de hoje
-let _allFreqCache = {}; // { "YYYY-MM-DD": { aluno_id: status } } — histórico
-let _freqLoaded   = false;
-
-async function carregarFreqDia() {
-  try {
-    const data = await supaGet(`select=aluno_id,status&data=eq.${todayKey}`);
-    _freqCache = {};
-    data.forEach(r => { _freqCache[r.aluno_id] = r.status; });
-    _freqLoaded = true;
-  } catch(e) {
-    console.error('Erro ao carregar frequência do dia:', e.message);
-    showToast('⚠️ Erro ao carregar dados: ' + e.message, 6000);
-  }
-}
-
-async function carregarTodaFreq() {
-  try {
-    const data = await supaGet('select=aluno_id,data,status&order=data.asc');
-    _allFreqCache = {};
-    data.forEach(r => {
-      if (!_allFreqCache[r.data]) _allFreqCache[r.data] = {};
-      _allFreqCache[r.data][r.aluno_id] = r.status;
-    });
-    return _allFreqCache;
-  } catch(e) {
-    console.error('Erro ao carregar histórico:', e.message);
-    return {};
-  }
-}
-
-// ═══════════════════════════════════════
-// STORAGE (alunos/disciplinas em memória; frequência no Supabase)
-// ═══════════════════════════════════════
-function getData()   { return DADOS_INICIAIS; }
-function saveData(d) {}
-
-function getDiscs()    { return DADOS_INICIAIS.disciplinas; }
-function getAlunos()   { return DADOS_INICIAIS.alunos; }
-function getFreq()     { return { [todayKey]: _freqCache }; }
-
-function saveDiscs(v)  { DADOS_INICIAIS.disciplinas = v; }
-function saveAlunos(v) { DADOS_INICIAIS.alunos = v; }
-function saveFreq(v)   { /* substituído pelo Supabase */ }
-
-// ═══════════════════════════════════════
-// TEMPO
-// ═══════════════════════════════════════
-const today    = new Date();
-const todayKey = today.toISOString().slice(0,10);
-function fmtDate(k){
-  const d=new Date(k+'T12:00:00');
-  return d.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'});
-}
-document.getElementById('topbar-date').textContent =
-  fmtDate(todayKey).replace(/^\w/,c=>c.toUpperCase());
-
-// ═══════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════
-let activeDisc   = null;
-let activeSerie  = '__todos__';
-let activeGrupoId = null;
-let relFiltro    = '__todos__';
-let alertFiltro  = '__todos__';
-
-// ═══════════════════════════════════════
-// TABS
-// ═══════════════════════════════════════
-function showTab(tab){
-  ['chamada','alertas','relatorio','gerenciar'].forEach(t=>{
-    document.getElementById('tab-'+t).classList.toggle('active',t===tab);
-    document.getElementById('tb-'+t).classList.toggle('active',t===tab);
-  });
-  if(tab==='chamada')   renderChamada();
-  if(tab==='alertas')   renderAlertas();
-  if(tab==='relatorio') renderRelatorio();
-  if(tab==='gerenciar') renderGerenciar();
-}
-
-// ═══════════════════════════════════════
-// CHAMADA
-// ═══════════════════════════════════════
-function renderChamada(){
-  renderStats();
-  renderDiscPills();
-  renderSeriePills();
-  if(activeDisc) renderAlunoList();
-}
-
-function renderStats(){
-  const alunos = getAlunos();
-  const freq   = getFreq();
-  const dayFreq= freq[todayKey]||{};
-  let presentes=0, faltas=0;
-  alunos.forEach(a=>{
-    const s=dayFreq[a.id];
-    if(s==='P') presentes++;
-    if(s==='F') faltas++;
-  });
-  const total = alunos.length;
-  const naoChamados = total - presentes - faltas;
-  document.getElementById('stats-grid').innerHTML=`
-    <div class="stat">
-      <div class="stat-label">Total convocados</div>
-      <div class="stat-val">${total}</div>
-      <div class="stat-sub">alunos cadastrados</div>
-    </div>
-    <div class="stat">
-      <div class="stat-label">✓ Presentes hoje</div>
-      <div class="stat-val" style="color:var(--green)">${presentes}</div>
-      <div class="stat-sub">registrados</div>
-    </div>
-    <div class="stat">
-      <div class="stat-label">✕ Faltas hoje</div>
-      <div class="stat-val" style="color:var(--red)">${faltas}</div>
-      <div class="stat-sub">registradas</div>
-    </div>
-    <div class="stat">
-      <div class="stat-label">Não chamados</div>
-      <div class="stat-val" style="color:var(--text3)">${naoChamados}</div>
-      <div class="stat-sub">pendentes</div>
-    </div>`;
-}
-
-function renderDiscPills(){
-  const freq    = getFreq();
-  const dayFreq = freq[todayKey] || {};
-  const allAlunos = getAlunos();
-
-  const wrap = document.getElementById('disc-pills');
-  wrap.innerHTML = GRUPOS_NIV.map(g => {
-    // Alunos deste grupo (nas turmas do grupo)
-    const turmasDoGrupo = TURMAS_NIV.filter(t => g.turmas.includes(t.id));
-    const nomesDoGrupo  = turmasDoGrupo.flatMap(t => t.alunos);
-    const lista = allAlunos.filter(a => nomesDoGrupo.includes(a.nome.toUpperCase()) && a.disc === g.disc);
-    const faltas = lista.filter(a => dayFreq[a.id] === 'F').length;
-    const isActive = activeGrupoId === g.id;
-    const eHoje = g.diaN === new Date().getDay();
-
-    return `<button class="disc-pill${isActive?' active':''}${eHoje?' hoje':''}"
-      onclick="selectGrupo('${g.id}')"
-      title="${g.disc} — ${g.dia||'Sem dia definido'}">
-      ${g.label}
-      <span class="pill-count">${lista.length}</span>
-      ${faltas>0?`<span style="font-size:10px;color:var(--red);font-weight:700">▲${faltas}</span>`:''}
-    </button>`;
-  }).join('');
-}
-
-function selectGrupo(grupoId){
-  const g = GRUPOS_NIV.find(x => x.id === grupoId);
-  if(!g) return;
-  activeGrupoId = grupoId;
-  activeDisc    = g.disc;
-  activeSerie   = '__todos__';
-  // Filtrar turmasDoGrupo para renderAlunoList usar
-  window._turmasGrupoAtivo = g.turmas;
-  renderDiscPills();
-  renderSeriePills();
-  renderAlunoList();
-}
-
-function selectDisc(disc){
-  activeDisc = disc;
-  activeSerie = '__todos__';
-  activeGrupoId = null;
-  window._turmasGrupoAtivo = null;
-  renderDiscPills();
-  renderSeriePills();
-  renderAlunoList();
-}
-
-function selectSerie(s){
-  activeSerie = s;
-  renderSeriePills();
-  renderAlunoList();
-}
-
-function renderSeriePills(){
-  const wrap = document.getElementById('serie-pills');
-  if(!activeDisc){ wrap.style.display='none'; return; }
-  // Se há grupo ativo, filtrar só pelos alunos das turmas do grupo
-  let alunos = getAlunos().filter(a=>a.disc===activeDisc);
-  if(window._turmasGrupoAtivo && typeof TURMAS_NIV !== 'undefined'){
-    const turmasGrupo = TURMAS_NIV.filter(t => window._turmasGrupoAtivo.includes(t.id));
-    const nomesGrupo  = turmasGrupo.flatMap(t => t.alunos).map(n=>n.toUpperCase());
-    alunos = alunos.filter(a => nomesGrupo.includes(a.nome.toUpperCase()));
-  }
-  const freq   = getFreq();
-  const dayFreq= freq[todayKey]||{};
-  // extract anos from turmas
-  const anos = [...new Set(alunos.map(a=>{
-    const m = a.turma.match(/^(\d+º)/);
-    return m ? m[1]+' ANO' : 'Outros';
-  }))].sort();
-  wrap.style.display = 'flex';
-  const all = ['__todos__',...anos];
-  wrap.innerHTML = all.map(s=>{
-    const label = s==='__todos__'?'Todos os anos':s;
-    const lista  = s==='__todos__' ? alunos : alunos.filter(a=>a.turma.startsWith(s.replace(' ANO','')));
-    const faltas = lista.filter(a=>dayFreq[a.id]==='F').length;
-    const isActive = activeSerie===s;
-    return `<button class="disc-pill${isActive?' active':''}" onclick="selectSerie('${s.replace(/'/g,"\\'")}')">
-      ${label}
-      <span class="pill-count">${lista.length}</span>
-      ${faltas>0?`<span style="font-size:10px;background:${isActive?'rgba(255,255,255,0.25)':'var(--red-bg)'};color:${isActive?'#fff':'var(--red)'};padding:1px 6px;border-radius:8px">✕${faltas}</span>`:''}
-    </button>`;
-  }).join('');
-}
-
-function renderAlunoList(){
-  if(!activeDisc) return;
-
-  // Turmas desta disciplina no TURMAS_NIV
-  // Usar turmas do grupo selecionado, ou todas da disc
-  const turmasDaDisc = (typeof TURMAS_NIV !== 'undefined')
-    ? (window._turmasGrupoAtivo
-        ? TURMAS_NIV.filter(t => window._turmasGrupoAtivo.includes(t.id))
-        : TURMAS_NIV.filter(t => t.disc === activeDisc))
-    : [];
-
-  const todayDiaN = new Date().getDay(); // 0=dom,1=seg,...,6=sab
-  const freq    = getFreq();
-  const dayFreq = freq[todayKey] || {};
-  const allAlunos = getAlunos().filter(a => a.disc === activeDisc);
-
-  // Filtrar por série se selecionado
-  const serieFilter = activeSerie !== '__todos__'
-    ? activeSerie.replace(' ANO','') : null;
-
-  const serieLabel = activeSerie==='__todos__' ? 'Todos os anos' : activeSerie;
-  document.getElementById('chamada-disc-title').textContent = activeDisc + ' — ' + serieLabel;
-
-  const wrap = document.getElementById('aluno-list');
-
-  if(turmasDaDisc.length === 0){
-    // Fallback: comportamento original sem TURMAS_NIV
-    let alunos = allAlunos;
-    if(serieFilter) alunos = alunos.filter(a=>a.turma.startsWith(serieFilter));
-    document.getElementById('chamada-disc-sub').textContent =
-      `${alunos.length} aluno${alunos.length!==1?'s':''} · ${fmtDate(todayKey)}`;
-    const p = alunos.filter(a=>dayFreq[a.id]==='P').length;
-    const f = alunos.filter(a=>dayFreq[a.id]==='F').length;
-    const prog = document.getElementById('chamada-progress');
-    if(prog){
-      const pct = alunos.length ? Math.round(p/alunos.length*100) : 0;
-      prog.innerHTML = `<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
-        <div style="flex:1;height:6px;background:var(--border);border-radius:3px">
-          <div style="width:${pct}%;height:100%;background:var(--accent);border-radius:3px;transition:width .3s"></div>
-        </div>
-        <span style="font-size:12px;color:var(--text3)">${p}/${alunos.length}</span>
-      </div>`;
-    }
-    wrap.innerHTML = alunos.map(a => buildAlunoRow(a, dayFreq)).join('');
-    return;
-  }
-
-  // Filtrar turmas por série se selecionado
-  let turmasFiltradas = turmasDaDisc;
-  if(serieFilter){
-    turmasFiltradas = turmasDaDisc.filter(t =>
-      t.alunos.some(nome => {
-        const al = allAlunos.find(a => a.nome.toUpperCase() === nome.toUpperCase());
-        return al && al.turma.replace('°','º').startsWith(serieFilter.replace('°','º'));
-      })
-    );
-  }
-
-  // Ordenar: turma do dia atual primeiro
-  turmasFiltradas = [...turmasFiltradas].sort((a,b) => {
-    const aHoje = a.diaN === todayDiaN ? -1 : 0;
-    const bHoje = b.diaN === todayDiaN ? -1 : 0;
-    if(aHoje !== bHoje) return aHoje - bHoje;
-    return a.horario.localeCompare(b.horario);
-  });
-
-  // Total geral
-  const totalAlunos = turmasFiltradas.reduce((acc,t) => {
-    const lista = t.alunos.map(n => allAlunos.find(a=>a.nome.toUpperCase()===n.toUpperCase() && a.disc===t.disc)).filter(Boolean);
-    return acc + lista.length;
-  }, 0);
-  const totalP = Object.values(dayFreq).filter(v=>v==='P').length;
-  document.getElementById('chamada-disc-sub').textContent =
-    `${totalAlunos} aluno${totalAlunos!==1?'s':''} · ${fmtDate(todayKey)}`;
-
-  const prog = document.getElementById('chamada-progress');
-  if(prog){
-    const pct = totalAlunos ? Math.round(totalP/totalAlunos*100) : 0;
-    prog.innerHTML = `<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
-      <div style="flex:1;height:6px;background:var(--border);border-radius:3px">
-        <div style="width:${pct}%;height:100%;background:var(--accent);border-radius:3px;transition:width .3s"></div>
-      </div>
-      <span style="font-size:12px;color:var(--text3)">${totalP}/${totalAlunos}</span>
-    </div>`;
-  }
-
-  // Renderizar agrupado por turma
-  wrap.innerHTML = turmasFiltradas.map(t => {
-    const lista = t.alunos.map(n => allAlunos.find(a=>a.nome.toUpperCase()===n.toUpperCase() && a.disc===t.disc)).filter(Boolean);
-    if(serieFilter) {
-      const filtered = lista.filter(a => a.turma.startsWith(serieFilter));
-      if(!filtered.length) return '';
-    }
-    const listaFinal = serieFilter ? lista.filter(a=>a.turma.replace('°','º').startsWith(serieFilter.replace('°','º'))) : lista;
-    if(!listaFinal.length) return '';
-
-    const eHoje = t.diaN === todayDiaN;
-    const p = listaFinal.filter(a=>dayFreq[a.id]==='P').length;
-    const f = listaFinal.filter(a=>dayFreq[a.id]==='F').length;
-
-    return `
-      <div style="margin-bottom:1.5rem">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;padding:8px 12px;
-                    background:${eHoje?'var(--accent)':'var(--bg)'};
-                    color:${eHoje?'#fff':'var(--text2)'};
-                    border-radius:var(--radius-lg);border:1px solid ${eHoje?'var(--accent)':'var(--border)'}">
-          <span style="font-size:13px;font-weight:600">${t.dia} · ${t.horario}</span>
-          ${eHoje?'<span style="font-size:10px;background:rgba(255,255,255,0.25);padding:2px 8px;border-radius:10px;margin-left:auto">HOJE</span>':''}
-          <span style="font-size:12px;${eHoje?'':'margin-left:auto;color:var(--text3)'}">
-            ${p}✓ ${f>0?f+'✗':''} / ${listaFinal.length}
-          </span>
-        </div>
-        ${listaFinal.map(a => buildAlunoRow(a, dayFreq)).join('')}
-      </div>
-    `;
-  }).join('');
-}
-
-async function setFreq(alunoId, status){
-  const current = _freqCache[alunoId];
-  if (current === status) {
-    delete _freqCache[alunoId];
-    if (!_allFreqCache[todayKey]) _allFreqCache[todayKey] = {};
-    delete _allFreqCache[todayKey][alunoId];
-    try { await supaDelete(alunoId, todayKey); } catch(e){ console.error(e.message); }
-  } else {
-    _freqCache[alunoId] = status;
-    if (!_allFreqCache[todayKey]) _allFreqCache[todayKey] = {};
-    _allFreqCache[todayKey][alunoId] = status;
-    try { await supaUpsert({ aluno_id: alunoId, data: todayKey, status }); } catch(e){ console.error(e.message); }
-  }
-  renderAlunoList();
-  renderStats();
-  renderDiscPills();
-  renderSeriePills();
-}
-
-function buildAlunoRow(a, dayFreq){
-  const s   = dayFreq[a.id]||null;
-  const cls = s==='P'?'presente':s==='F'?'falta':'';
-  const ini = initials(a.nome);
-  const totalFaltas = contarFaltas(a.id);
-  const badgeCls = totalFaltas===0?'badge-ok':totalFaltas<=2?'badge-warn':'badge-crit';
-  return `<div class="aluno-row ${cls}" id="ar-${a.id}">
-    <div class="aluno-avatar">${ini}</div>
-    <div class="aluno-info">
-      <div class="aluno-nome">${a.nome}</div>
-      <div class="aluno-meta">${a.turma} · <span class="faltas-badge ${badgeCls}">${totalFaltas} falta${totalFaltas!==1?'s':''}</span></div>
-    </div>
-    <div class="aluno-btns">
-      <button class="check-btn${s==='P'?' p-active':''}" title="Presente" onclick="setFreq('${a.id}','P')">✓</button>
-      <button class="check-btn${s==='F'?' f-active':''}" title="Falta"    onclick="setFreq('${a.id}','F')">✕</button>
-    </div>
-  </div>`;
-}
-
-async function marcarTodos(status){
-  if(!activeDisc) return;
-  let alunos = getAlunos().filter(a=>a.disc===activeDisc);
-  if(activeSerie!=='__todos__'){
-    const prefix = activeSerie.replace(' ANO','');
-    alunos = alunos.filter(a=>a.turma.startsWith(prefix));
-  }
-  if(!_allFreqCache[todayKey]) _allFreqCache[todayKey] = {};
-  alunos.forEach(a => {
-    _freqCache[a.id] = status;
-    _allFreqCache[todayKey][a.id] = status;
-  });
-  const upserts = alunos.map(a => ({ aluno_id: a.id, data: todayKey, status }));
-  try { await supaUpsert(upserts); } catch(e){ console.error(e.message); }
-  renderAlunoList();
-  renderStats();
-  renderDiscPills();
-  renderSeriePills();
-}
-
-// ═══════════════════════════════════════
-// ALERTAS / NOTIFICAÇÕES
-// ═══════════════════════════════════════
-function renderAlertas(){
-  const alunos = getAlunos();
-  const discs  = getDiscs();
-  const wrap   = document.getElementById('alertas-list');
-
-  // filtro de disciplina
-  const filterWrap = document.getElementById('alerta-filters');
-  filterWrap.innerHTML = ['Todas',...discs].map(d=>`
-    <button class="btn${(alertFiltro==='__todos__'&&d==='Todas')||(alertFiltro===d)?' btn-green':''}"
-      onclick="alertFiltro='${d==='Todas'?'__todos__':d.replace(/'/g,"\\'")}';renderAlertas()">
-      ${d}
-    </button>`).join('');
-
-  const lista = alunos
-    .filter(a=>alertFiltro==='__todos__'||a.disc===alertFiltro)
-    .map(a=>({...a, faltas: contarFaltas(a.id), diasFalta: diasFalta(a.id)}))
-    .filter(a=>a.faltas>=2)
-    .sort((a,b)=>b.faltas-a.faltas);
-
-  if(!lista.length){
-    wrap.innerHTML=`<div class="empty"><span class="e-ico">🎉</span><p>Nenhum aluno com 2 ou mais faltas.<br>Tudo certo por aqui!</p></div>`;
-    return;
-  }
-
-  wrap.innerHTML = lista.map(a=>{
-    const msg = gerarMensagem(a);
-    return `<div class="notif-card" id="nc-${a.id}">
-      <div class="notif-hdr" onclick="toggleNotif('${a.id}')">
-        <div class="notif-avatar-wrap">
-          <div class="notif-avatar">${initials(a.nome)}</div>
-        </div>
-        <div class="notif-info">
-          <div class="notif-nome">${a.nome}</div>
-          <div class="notif-sub">${a.disc} · ${a.turma}</div>
-        </div>
-        <div class="notif-badge">✕ ${a.faltas} falta${a.faltas!==1?'s':''}</div>
-        <span style="font-size:12px;color:var(--text3);margin-left:4px">▼</span>
-      </div>
-      <div class="notif-body">
-        <div class="notif-msg">${msg}</div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button class="copy-btn" onclick="copiarMsg('${a.id}',this)">
-            <span>📱</span> Copiar para WhatsApp
-          </button>
-          ${a.tel?`<a href="https://wa.me/55${a.tel.replace(/\D/g,'')}?text=${encodeURIComponent(msg)}" target="_blank" class="copy-btn" style="text-decoration:none">
-            <span>✉️</span> Abrir WhatsApp
-          </a>`:''}
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-
-  // salva mensagens em mapa para copiar
-  window._notifMsgs = {};
-  lista.forEach(a=>{ window._notifMsgs[a.id]=gerarMensagem(a); });
-}
-
-function toggleNotif(id){
-  const el = document.getElementById('nc-'+id);
-  el.classList.toggle('open');
-}
-
-function gerarMensagem(a){
-  const escola = 'Arena Ensino Fundamental';
-  const dias   = a.diasFalta.slice(-3).map(d=>new Date(d+'T12:00:00').toLocaleDateString('pt-BR')).join(', ');
-  return `Olá! 👋
-
-Somos da *${escola}* e entramos em contato para informar sobre a frequência de *${a.nome}* nas aulas de nivelamento de *${a.disc}*.
-
-⚠️ *${a.faltas} falta${a.faltas!==1?'s registradas':' registrada'}* nas aulas de reforço.
-📅 Últimas ausências: ${dias || 'ver histórico'}
-
-As aulas de nivelamento são fundamentais para o desenvolvimento do(a) aluno(a). Pedimos que, se possível, o(a) estimule a participação nas próximas aulas.
-
-Qualquer dúvida, estamos à disposição. 🙏
-*Coordenação — ${escola}*`;
-}
-
-function copiarMsg(id, btn){
-  const msg = window._notifMsgs?.[id]||'';
-  navigator.clipboard.writeText(msg).then(()=>{
-    const orig = btn.innerHTML;
-    btn.innerHTML='<span>✓</span> Copiado!';
-    btn.style.background='var(--accent)';
-    setTimeout(()=>{ btn.innerHTML=orig; btn.style.background=''; },2000);
-  }).catch(()=>{
-    // fallback
-    const ta=document.createElement('textarea');
-    ta.value=msg; document.body.appendChild(ta); ta.select();
-    document.execCommand('copy'); document.body.removeChild(ta);
-  });
-}
-
-// ═══════════════════════════════════════
-// RELATÓRIO
-// ═══════════════════════════════════════
-function renderRelatorio(){
-  const discs  = getDiscs();
-  const alunos = getAlunos();
-  const fw = document.getElementById('relatorio-filters');
-  fw.innerHTML = ['Todos',...discs].map(d=>`
-    <button class="btn${(relFiltro==='__todos__'&&d==='Todos')||(relFiltro===d)?' btn-green':''}"
-      onclick="relFiltro='${d==='Todos'?'__todos__':d.replace(/'/g,"\\'")}';renderRelatorio()">
-      ${d}
-    </button>`).join('');
-
-  const lista = alunos
-    .filter(a=>relFiltro==='__todos__'||a.disc===relFiltro)
-    .map(a=>{
-      const f  = contarFaltas(a.id);
-      const p  = contarPresencas(a.id);
-      const tot= f+p;
-      const pct= tot>0?Math.round(p/tot*100):100;
-      return {...a, faltas:f, presencas:p, total:tot, pct};
-    })
-    .sort((a,b)=>a.pct-b.pct);
-
-  const wrap = document.getElementById('relatorio-list');
-  if(!lista.length){
-    wrap.innerHTML=`<div class="empty"><span class="e-ico">📊</span><p>Nenhum aluno cadastrado ainda.</p></div>`;
-    return;
-  }
-
-  wrap.innerHTML = lista.map(a=>{
-    const col = a.pct>=80?'var(--accent-mid)':a.pct>=60?'#E9A823':'var(--red)';
-    return `<div class="relatorio-card" onclick="openDetalhe('${a.id}')">
-      <div class="rel-avatar">${initials(a.nome)}</div>
-      <div class="rel-info">
-        <div class="rel-nome">${a.nome}</div>
-        <div class="rel-sub">${a.disc} · ${a.turma} · ${a.faltas} falta${a.faltas!==1?'s':''}</div>
-      </div>
-      <div class="rel-bar-wrap">
-        <div class="rel-pct" style="color:${col}">${a.pct}%</div>
-        <div class="rel-bar">
-          <div class="rel-bar-fill" style="width:${a.pct}%;background:${col}"></div>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function openDetalhe(id){
-  const a = getAlunos().find(x=>x.id===id);
-  if(!a) return;
-  const freq = getFreq();
-  const allDays = Object.keys(freq).sort().reverse();
-
-  document.getElementById('detalhe-nome').textContent = a.nome;
-
-  const f   = contarFaltas(id);
-  const p   = contarPresencas(id);
-  const tot = f+p;
-  const pct = tot>0?Math.round(p/tot*100):100;
-
-  let rows='';
-  allDays.forEach(day=>{
-    const s=freq[day]?.[id];
-    if(!s) return;
-    rows+=`<div class="hist-row">
-      <span>${new Date(day+'T12:00:00').toLocaleDateString('pt-BR',{weekday:'short',day:'numeric',month:'short'})}</span>
-      <span class="h-disc" style="font-size:12px;color:var(--text3)">${a.disc}</span>
-      <span class="h-turma" style="font-size:12px;color:var(--text3)">${a.turma}</span>
-      <span class="status-pill ${s==='P'?'s-presente':'s-falta'}">${s==='P'?'Presente':'Falta'}</span>
-    </div>`;
-  });
-  if(!rows) rows=`<div style="padding:16px;text-align:center;color:var(--text3);font-size:13px">Nenhum registro ainda.</div>`;
-
-  document.getElementById('detalhe-body').innerHTML=`
-    <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
-      <div class="stat" style="flex:1;min-width:80px"><div class="stat-label">Presenças</div><div class="stat-val" style="font-size:22px;color:var(--green)">${p}</div></div>
-      <div class="stat" style="flex:1;min-width:80px"><div class="stat-label">Faltas</div><div class="stat-val" style="font-size:22px;color:var(--red)">${f}</div></div>
-      <div class="stat" style="flex:1;min-width:80px"><div class="stat-label">Frequência</div><div class="stat-val" style="font-size:22px;color:${pct>=80?'var(--green)':pct>=60?'#E9A823':'var(--red)'}">${pct}%</div></div>
-    </div>
-    <div class="hist-table">
-      <div class="hist-row hist-head"><span>Data</span><span class="h-disc">Disciplina</span><span class="h-turma">Turma</span><span>Status</span></div>
-      ${rows}
-    </div>`;
-  document.getElementById('modal-detalhe').classList.add('open');
-}
-
-// ═══════════════════════════════════════
-// GERENCIAR
-// ═══════════════════════════════════════
-function renderGerenciar(){
-  const discs  = getDiscs();
-  const alunos = getAlunos();
-  const wrap   = document.getElementById('gerenciar-list');
-
-  if(!discs.length){
-    wrap.innerHTML=`<div class="empty"><span class="e-ico">📚</span><p>Nenhuma disciplina cadastrada.<br>Clique em "+ Nova disciplina" para começar.</p></div>`;
-    return;
-  }
-
-  wrap.innerHTML = discs.map(disc=>{
-    const lista = alunos.filter(a=>a.disc===disc);
-    const rows  = lista.length
-      ? lista.map(a=>`<div class="aluno-manage-row">
-          <div class="aluno-avatar" style="width:30px;height:30px;font-size:11px">${initials(a.nome)}</div>
-          <span class="nome">${a.nome}</span>
-          <span class="turma">${a.turma}</span>
-          <button class="del-btn" onclick="deletarAluno('${a.id}')" title="Remover">✕</button>
-        </div>`).join('')
-      : `<div style="font-size:12px;color:var(--text3);padding:8px 0">Nenhum aluno nesta disciplina.</div>`;
-
-    return `<div class="disc-section">
-      <div class="disc-section-title">
-        <span>📖 ${disc} <span style="font-size:11px;color:var(--text3);font-weight:400">(${lista.length} aluno${lista.length!==1?'s':''})</span></span>
-        <button class="del-btn" onclick="deletarDisc('${disc.replace(/'/g,"\\'")}')">🗑 Remover disciplina</button>
-      </div>
-      ${rows}
-    </div>`;
-  }).join('');
-}
-
-// ═══════════════════════════════════════
-// MODAIS
-// ═══════════════════════════════════════
-function openModalAluno(){
-  const discs = getDiscs();
-  document.getElementById('inp-disc').innerHTML =
-    discs.map(d=>`<option value="${d}">${d}</option>`).join('');
-  document.getElementById('inp-nome').value  = '';
-  document.getElementById('inp-turma').value = '';
-  document.getElementById('inp-tel').value   = '';
-  document.getElementById('modal-aluno').classList.add('open');
-  setTimeout(()=>document.getElementById('inp-nome').focus(),100);
-}
-
-function openModalDisc(){
-  document.getElementById('inp-disc-nome').value='';
-  document.getElementById('modal-disc').classList.add('open');
-  setTimeout(()=>document.getElementById('inp-disc-nome').focus(),100);
-}
-
-function closeModal(id){
-  document.getElementById(id).classList.remove('open');
-}
-
-function salvarAluno(){
-  const nome  = document.getElementById('inp-nome').value.trim();
-  const turma = document.getElementById('inp-turma').value.trim();
-  const disc  = document.getElementById('inp-disc').value;
-  const tel   = document.getElementById('inp-tel').value.trim();
-  if(!nome||!turma||!disc){ alert('Preencha nome, turma e disciplina.'); return; }
-  const alunos = getAlunos();
-  alunos.push({ id: 'a'+Date.now(), nome, turma, disc, tel });
-  saveAlunos(alunos);
-  closeModal('modal-aluno');
-  renderGerenciar();
-  renderChamada();
-}
-
-function salvarDisc(){
-  const nome = document.getElementById('inp-disc-nome').value.trim();
-  if(!nome){ alert('Digite o nome da disciplina.'); return; }
-  const discs = getDiscs();
-  if(discs.includes(nome)){ alert('Disciplina já existe.'); return; }
-  discs.push(nome);
-  saveDiscs(discs);
-  closeModal('modal-disc');
-  renderGerenciar();
-  renderChamada();
-}
-
-function deletarAluno(id){
-  if(!confirm('Remover este aluno? O histórico de frequência será mantido.')) return;
-  saveAlunos(getAlunos().filter(a=>a.id!==id));
-  renderGerenciar();
-  renderChamada();
-}
-
-function deletarDisc(disc){
-  if(!confirm(`Remover a disciplina "${disc}"? Os alunos desta disciplina também serão removidos.`)) return;
-  saveDiscs(getDiscs().filter(d=>d!==disc));
-  saveAlunos(getAlunos().filter(a=>a.disc!==disc));
-  if(activeDisc===disc){ activeDisc=null; activeSerie='__todos__'; }
-  renderGerenciar();
-  renderChamada();
-}
-
-// close on overlay click
-document.querySelectorAll('.modal-overlay').forEach(el=>{
-  el.addEventListener('click',function(e){ if(e.target===this) this.classList.remove('open'); });
-});
-document.addEventListener('keydown',e=>{ if(e.key==='Escape') document.querySelectorAll('.modal-overlay.open').forEach(el=>el.classList.remove('open')); });
-
-// ═══════════════════════════════════════
-// HELPERS
-// ═══════════════════════════════════════
-function initials(name){
-  return name.split(' ').filter(Boolean).slice(0,2).map(w=>w[0]?.toUpperCase()||'').join('');
-}
-function contarFaltas(id){
-  return Object.values(_allFreqCache).filter(day=>day[id]==='F').length;
-}
-function contarPresencas(id){
-  return Object.values(_allFreqCache).filter(day=>day[id]==='P').length;
-}
-function diasFalta(id){
-  return Object.keys(_allFreqCache).filter(day=>_allFreqCache[day][id]==='F').sort();
-}
-
-// ═══════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════
-async function init(){
-  showToast('⏳ Carregando dados...', 3000);
-  await carregarFreqDia();
-  await carregarTodaFreq();
-  _allFreqCache[todayKey] = _freqCache;
-  nvSubTab('chamada');
-}
-init();
 
 function showToast(msg, duration=2500){
   let t = document.getElementById('_toast');
@@ -3955,29 +2971,6 @@ async function confirmarEnvioEmail() {
     stat.innerHTML=`<div style="color:var(--red);font-size:12px">⚠️ Erro: ${e?.text||e?.message||JSON.stringify(e)}</div>`;
     btn.disabled=false; btn.textContent='✉️ Tentar novamente';
   }
-}
-
-// ── Sub-tabs do Nivelamento ───────────────────────────────
-function nvSubTab(tab) {
-  // Desativa todos os botões e panes do nivelamento
-  ['chamada','historico','alertas','frequencia','alunos','relatorios'].forEach(t => {
-    const b = document.getElementById('nvst-'+t);
-    const p = document.getElementById('nvpane-'+t);
-    if(b) b.classList.remove('active');
-    if(p) p.classList.remove('active');
-  });
-  // Ativa o selecionado
-  const btn  = document.getElementById('nvst-'+tab);
-  const pane = document.getElementById('nvpane-'+tab);
-  if(btn)  btn.classList.add('active');
-  if(pane) pane.classList.add('active');
-  // Renderiza o conteúdo
-  if(tab==='historico')  renderHistory();
-  if(tab==='alertas')    { alertFiltro='__todos__'; renderAlertas(); }
-  if(tab==='frequencia') { relFiltro='__todos__'; renderRelatorio(); }
-  if(tab==='alunos')     renderGerenciar();
-  if(tab==='chamada')    renderChamada();
-  if(tab==='relatorios') initRelatorios();
 }
 
 // ── Editar usuário completo ───────────────────────────────
@@ -7901,52 +6894,160 @@ function renderModalGrid(lista) {
   `).join('');
 }
 
+// ── Modalidades: estado de edições em memória ─────────────────
+// Estrutura: { "MODAL::DESC": { added: [{nome,turma,tel,resp}], removed: Set(nome) } }
+let _modalEdits = {};
+
+function _getModalKey(nomeModal, desc) { return nomeModal + '::' + desc; }
+
+function _getAlunosList(nomeModal, tDesc) {
+  const m = MODALIDADES_DATA.find(x => x.modal === nomeModal);
+  if (!m) return [];
+  const t = m.turmas.find(x => x.desc === tDesc);
+  if (!t) return [];
+  const key = _getModalKey(nomeModal, tDesc);
+  const edits = _modalEdits[key] || { added: [], removed: new Set() };
+  const base = t.alunos.filter(a => !edits.removed.has(a.nome));
+  return [...base, ...edits.added];
+}
+
+// ── Modalidades: estado de edições em memória ─────────────────
+let _modalEdits = {};
+function _getModalKey(nm, d) { return nm + '::' + d; }
+function _getAlunosList(nm, tDesc) {
+  const m = MODALIDADES_DATA.find(x => x.modal === nm);
+  if (!m) return [];
+  const t = m.turmas.find(x => x.desc === tDesc);
+  if (!t) return [];
+  const key = _getModalKey(nm, tDesc);
+  const edits = _modalEdits[key] || { added: [], removed: new Set() };
+  return [...t.alunos.filter(a => !edits.removed.has(a.nome)), ...edits.added];
+}
+
 function abrirModalDetalhe(nomeModal) {
   const m = MODALIDADES_DATA.find(x => x.modal === nomeModal);
   if (!m) return;
   document.getElementById('modal-grid').style.display = 'none';
   document.getElementById('modal-filter').closest('div').style.display = 'none';
-  const det = document.getElementById('modal-detalhe');
-  det.style.display = 'block';
-  document.getElementById('modal-detalhe-titulo').textContent = '🏅 ' + m.modal;
-  document.getElementById('modal-detalhe-sub').textContent = m.total + ' aluno' + (m.total!==1?'s':'') + ' · ' + m.turmas.length + ' turma' + (m.turmas.length!==1?'s':'');
-
-  document.getElementById('modal-detalhe-corpo').innerHTML = m.turmas.map(t => `
-    <div style="background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border);
-                margin-bottom:1rem;overflow:hidden;box-shadow:var(--shadow)">
-      <div style="padding:12px 16px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:10px">
-        <div>
-          <div style="font-size:13px;font-weight:600">${t.desc}</div>
-          <div style="font-size:11px;opacity:.8;margin-top:2px">${t.alunos.length} aluno${t.alunos.length!==1?'s':''}</div>
-        </div>
-        <button onclick="copiarNumerosTurma(event,this)"
-          data-desc="${t.desc}" data-modal="${nomeModal}"
-          style="background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);color:#fff;
-                 border-radius:20px;padding:4px 12px;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap"
-          onmouseover="this.style.background='rgba(255,255,255,0.35)'"
-          onmouseout="this.style.background='rgba(255,255,255,0.2)'">📋 Copiar números</button>
-      </div>
-      <div>
-        ${t.alunos.map((a,i) => `
-          <div style="display:grid;grid-template-columns:24px 1fr auto;align-items:center;gap:10px;
-                      padding:9px 16px;${i>0?'border-top:1px solid var(--border)':''}">
-            <span style="font-size:11px;color:var(--text3);font-weight:500">${String(i+1).padStart(2,'0')}</span>
-            <div>
-              <div style="font-size:13px;font-weight:500">${a.nome}</div>
-              <div style="font-size:11px;color:var(--text3)">${a.turma ? a.turma+'º ANO' : '—'}${a.resp ? ' · 👤 '+a.resp : ''}</div>
-            </div>
-            ${a.tel
-              ? `<a href="https://wa.me/55${a.tel.replace(/\D/g,'')}" target="_blank"
-                   style="font-size:11px;color:var(--green);font-weight:500;text-decoration:none;white-space:nowrap">📱 ${a.tel}</a>`
-              : '<span style="font-size:11px;color:var(--text3)">—</span>'
-            }
-          </div>
-        `).join('')}
-      </div>
-    </div>
-  `).join('');
+  document.getElementById('modal-detalhe').style.display = 'block';
+  document.getElementById('modal-detalhe-titulo').textContent = '\u{1F3C5} ' + nomeModal;
+  _renderModalCorpo(nomeModal);
 }
 
+function _renderModalCorpo(nomeModal) {
+  const m = MODALIDADES_DATA.find(x => x.modal === nomeModal);
+  if (!m) return;
+  const totalAtual = m.turmas.reduce((s,t) => s + _getAlunosList(nomeModal, t.desc).length, 0);
+  document.getElementById('modal-detalhe-sub').textContent =
+    totalAtual + ' aluno' + (totalAtual!==1?'s':'') + ' \u00B7 ' + m.turmas.length + ' turma' + (m.turmas.length!==1?'s':'');
+
+  document.getElementById('modal-detalhe-corpo').innerHTML = m.turmas.map(t => {
+    const lista = _getAlunosList(nomeModal, t.desc);
+    const kc = _getModalKey(nomeModal, t.desc).replace(/[^a-zA-Z0-9]/g,'_');
+    const descEsc = t.desc.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    const nmEsc   = nomeModal.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    return `<div style="background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border);margin-bottom:1rem;overflow:hidden;box-shadow:var(--shadow)">
+      <div style="padding:12px 16px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
+        <div>
+          <div style="font-size:13px;font-weight:600">${t.desc}</div>
+          <div style="font-size:11px;opacity:.8;margin-top:2px">${lista.length} aluno${lista.length!==1?'s':''}</div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button onclick="copiarNumerosTurma(event,this)" data-desc="${t.desc}" data-modal="${nomeModal}"
+            style="background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);color:#fff;border-radius:20px;padding:4px 12px;font-size:11px;font-weight:600;cursor:pointer">\u{1F4CB} Copiar</button>
+          <button onclick="modalShowAdd('${nmEsc}','${descEsc}','${kc}')"
+            style="background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);color:#fff;border-radius:20px;padding:4px 12px;font-size:11px;font-weight:600;cursor:pointer">+ Aluno</button>
+        </div>
+      </div>
+      <div id="maf-${kc}" style="display:none;padding:12px 16px;background:var(--surface2);border-bottom:1px solid var(--border)">
+        <div style="position:relative;margin-bottom:8px">
+          <input id="mai-${kc}" class="form-input" placeholder="Buscar aluno..." autocomplete="off"
+            oninput="modalBuscar(this,'${nmEsc}','${descEsc}','${kc}')" style="width:100%">
+          <div id="mas-${kc}" style="position:absolute;top:100%;left:0;right:0;z-index:50;background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;max-height:180px;overflow-y:auto;display:none"></div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button onclick="modalConfAdd('${nmEsc}','${descEsc}','${kc}')" class="btn btn-green" style="height:32px;padding:0 14px;font-size:12px">\u2713 Adicionar</button>
+          <button onclick="document.getElementById('maf-${kc}').style.display='none'" class="btn" style="height:32px;padding:0 14px;font-size:12px">Cancelar</button>
+        </div>
+      </div>
+      <div>${lista.map((a,idx) => `
+        <div style="display:grid;grid-template-columns:24px 1fr auto auto;align-items:center;gap:8px;padding:9px 16px;${idx>0?'border-top:1px solid var(--border)':''}">
+          <span style="font-size:11px;color:var(--text3);font-weight:500">${String(idx+1).padStart(2,'0')}</span>
+          <div>
+            <div style="font-size:13px;font-weight:500">${a.nome}</div>
+            <div style="font-size:11px;color:var(--text3)">${a.turma ? a.turma+'\u00BA ANO' : '\u2014'}${a.resp ? ' \u00B7 \u{1F464} '+a.resp : ''}</div>
+          </div>
+          ${a.tel ? `<a href="https://wa.me/55${a.tel.replace(/\D/g,'')}" target="_blank" style="font-size:11px;color:var(--green);font-weight:500;text-decoration:none">\u{1F4F1} ${a.tel}</a>` : '<span style="font-size:11px;color:var(--text3)">\u2014</span>'}
+          <button onclick="modalRemover('${nmEsc}','${descEsc}','${a.nome.replace(/\\/g,'\\\\').replace(/'/g,"\\'")}','${kc}')"
+            style="background:none;border:1px solid var(--border);border-radius:6px;padding:3px 8px;font-size:11px;color:var(--red);cursor:pointer">\u2715</button>
+        </div>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function modalShowAdd(nm, desc, kc) {
+  const f = document.getElementById('maf-'+kc);
+  if (!f) return;
+  f.style.display = f.style.display==='none' ? 'block' : 'none';
+  if (f.style.display==='block') {
+    const inp = document.getElementById('mai-'+kc);
+    if (inp) { inp.value=''; inp.focus(); }
+    const sg = document.getElementById('mas-'+kc);
+    if (sg) sg.style.display='none';
+    f.dataset.selNome=''; f.dataset.selTurma=''; f.dataset.selTel=''; f.dataset.selResp='';
+  }
+}
+
+function modalBuscar(inp, nm, desc, kc) {
+  const q = inp.value.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  const sg = document.getElementById('mas-'+kc);
+  const f  = document.getElementById('maf-'+kc);
+  if (!sg||!f) return;
+  f.dataset.selNome='';
+  if (q.length<2) { sg.style.display='none'; return; }
+  const res = ALUNOS_PESQUISA.filter(a => a.n.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').includes(q)).slice(0,10);
+  if (!res.length) { sg.style.display='none'; return; }
+  sg.innerHTML = res.map(a => `<div onclick="modalSel('${a.n.replace(/'/g,"\\'")}','${(a.t||'').replace(/'/g,"\\'")}','${(a.tel||'').replace(/'/g,"\\'")}','${(a.r||'').replace(/'/g,"\\'")}','${kc}',this)"
+    style="padding:8px 12px;cursor:pointer;font-size:13px;border-bottom:1px solid var(--border)" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
+    <span style="font-weight:500">${a.n}</span><span style="font-size:11px;color:var(--text3);margin-left:6px">${a.t||''}</span></div>`).join('');
+  sg.style.display='block';
+}
+
+function modalSel(nome, turma, tel, resp, kc) {
+  const f = document.getElementById('maf-'+kc);
+  const inp = document.getElementById('mai-'+kc);
+  const sg = document.getElementById('mas-'+kc);
+  if (f) { f.dataset.selNome=nome; f.dataset.selTurma=turma; f.dataset.selTel=tel; f.dataset.selResp=resp; }
+  if (inp) inp.value=nome;
+  if (sg) sg.style.display='none';
+}
+
+function modalConfAdd(nm, desc, kc) {
+  const f = document.getElementById('maf-'+kc);
+  const inp = document.getElementById('mai-'+kc);
+  if (!f||!inp) return;
+  const nome = (f.dataset.selNome || inp.value).trim().toUpperCase();
+  if (!nome) { showToast('\u26A0\uFE0F Digite ou selecione um aluno'); return; }
+  const key = _getModalKey(nm, desc);
+  if (!_modalEdits[key]) _modalEdits[key] = { added:[], removed:new Set() };
+  const lista = _getAlunosList(nm, desc);
+  if (lista.find(a => a.nome.toUpperCase()===nome)) { showToast('\u26A0\uFE0F Aluno j\u00E1 est\u00E1 nessa turma'); return; }
+  _modalEdits[key].added.push({ nome, turma:f.dataset.selTurma||'', tel:f.dataset.selTel||'', resp:f.dataset.selResp||'' });
+  f.style.display='none';
+  _renderModalCorpo(nm);
+  showToast('\u2713 Aluno adicionado!');
+}
+
+function modalRemover(nm, desc, nome, kc) {
+  if (!confirm('Remover ' + nome + ' desta turma?')) return;
+  const key = _getModalKey(nm, desc);
+  if (!_modalEdits[key]) _modalEdits[key] = { added:[], removed:new Set() };
+  _modalEdits[key].added = _modalEdits[key].added.filter(a => a.nome!==nome);
+  _modalEdits[key].removed.add(nome);
+  _renderModalCorpo(nm);
+  showToast('\u2713 Aluno removido!');
+}
 function fecharModalDetalhe() {
   document.getElementById('modal-detalhe').style.display = 'none';
   document.getElementById('modal-grid').style.display = 'grid';
@@ -8093,6 +7194,174 @@ function ortObsToggle(pid) {
   const open = body.style.display === 'none';
   body.style.display = open ? 'block' : 'none';
   if(chev) chev.style.transform = open ? 'rotate(180deg)' : '';
+}
+
+
+// ══════════════════════════════════════════════════════════════
+// RELATÓRIO DE ATENDIMENTO
+// ══════════════════════════════════════════════════════════════
+let _atendimentos = [];
+let _atendLoaded  = false;
+let _atendAlunoSel = { nome:'', turma:'' };
+
+async function initAtendimento() {
+  const di = document.getElementById('atend-data');
+  if (di && !di.value) di.value = todayKey;
+  if (!_atendLoaded) await atendCarregar();
+  atendRenderHistorico();
+  atendSubTab('registro');
+}
+
+function atendSubTab(tab) {
+  ['registro','historico'].forEach(t => {
+    const b = document.getElementById('atend-tab-'+t);
+    const p = document.getElementById('atend-pane-'+t);
+    if (b) b.classList.toggle('active', t===tab);
+    if (p) p.classList.toggle('active', t===tab);
+  });
+  if (tab==='historico') atendRenderHistorico();
+}
+
+async function atendCarregar() {
+  try {
+    const res = await supaGet('select=*&order=data.desc,created_at.desc&limit=500', 'atendimentos');
+    _atendimentos = res || [];
+    _atendLoaded = true;
+  } catch(e) {
+    console.error('Erro ao carregar atendimentos:', e.message);
+    _atendimentos = [];
+    _atendLoaded = true;
+  }
+}
+
+function atendBuscarAluno(q) {
+  const sg = document.getElementById('atend-aluno-sugest');
+  const info = document.getElementById('atend-aluno-info');
+  _atendAlunoSel = { nome:'', turma:'' };
+  if (!sg) return;
+  if (!q || q.trim().length < 2) { sg.style.display='none'; if(info) info.textContent=''; return; }
+  const norm = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+  const q2 = norm(q.trim());
+  const res = ALUNOS_PESQUISA.filter(a => norm(a.n).includes(q2)).slice(0,12);
+  if (!res.length) { sg.style.display='none'; return; }
+  sg.innerHTML = res.map(a => `
+    <div onclick="atendSelecionarAluno('${a.n.replace(/'/g,"\'")}','${(a.t||'').replace(/'/g,"\'")}',this)"
+      style="padding:8px 12px;cursor:pointer;font-size:13px;border-bottom:1px solid var(--border)"
+      onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
+      <span style="font-weight:500">${a.n}</span>
+      <span style="font-size:11px;color:var(--text3);margin-left:6px">${a.t||''}</span>
+    </div>`).join('');
+  sg.style.display='block';
+}
+
+function atendSelecionarAluno(nome, turma) {
+  _atendAlunoSel = { nome, turma };
+  const inp  = document.getElementById('atend-aluno-input');
+  const sg   = document.getElementById('atend-aluno-sugest');
+  const info = document.getElementById('atend-aluno-info');
+  if (inp)  inp.value = nome;
+  if (sg)   sg.style.display = 'none';
+  if (info) info.textContent = turma ? 'Turma: ' + turma : '';
+}
+
+async function atendRegistrar() {
+  const data   = document.getElementById('atend-data')?.value;
+  const tema   = document.getElementById('atend-tema')?.value;
+  const relato = document.getElementById('atend-relato')?.value.trim();
+  const nomeInp = document.getElementById('atend-aluno-input')?.value.trim();
+  const status  = document.getElementById('atend-status');
+  const nome_aluno = _atendAlunoSel.nome || nomeInp.toUpperCase();
+  const turma      = _atendAlunoSel.turma || '';
+
+  if (!data || !nome_aluno || !tema) { showToast('⚠️ Preencha data, aluno e tema'); return; }
+  if (status) status.textContent = 'Salvando...';
+
+  const novo = { data, nome_aluno, turma, tema, relato: relato||'', registrado_por: currentUser?.name||'' };
+  try {
+    const res = await supaInsert('atendimentos', novo);
+    const salvo = Array.isArray(res) ? res[0] : res;
+    _atendimentos.unshift(salvo || { ...novo, id: Date.now().toString(), created_at: new Date().toISOString() });
+    document.getElementById('atend-relato').value = '';
+    document.getElementById('atend-aluno-input').value = '';
+    document.getElementById('atend-aluno-info').textContent = '';
+    _atendAlunoSel = { nome:'', turma:'' };
+    if (status) status.textContent = '';
+    showToast('✓ Atendimento registrado!');
+    atendRenderHistorico();
+  } catch(e) {
+    if (status) status.textContent = '';
+    showToast('⚠️ Erro ao salvar: ' + e.message, 5000);
+  }
+}
+
+function atendRenderHistorico() {
+  const filtAluno   = (document.getElementById('atend-hist-aluno')?.value||'').trim().toLowerCase();
+  const filtTema    = document.getElementById('atend-hist-tema')?.value||'';
+  const filtPeriodo = parseInt(document.getElementById('atend-hist-periodo')?.value||'30');
+  const norm = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+
+  let lista = [..._atendimentos];
+  if (filtAluno) lista = lista.filter(a => norm(a.nome_aluno||'').includes(norm(filtAluno)));
+  if (filtTema)  lista = lista.filter(a => a.tema === filtTema);
+  if (filtPeriodo > 0) {
+    const lim = new Date(); lim.setDate(lim.getDate() - filtPeriodo);
+    lista = lista.filter(a => new Date(a.data) >= lim);
+  }
+
+  const statsEl = document.getElementById('atend-hist-stats');
+  if (statsEl) {
+    const acad = lista.filter(a=>a.tema==='academico').length;
+    const disc = lista.filter(a=>a.tema==='disciplinar').length;
+    statsEl.innerHTML = `
+      <div class="stat" style="flex:1;min-width:120px"><div class="stat-label">Total</div><div class="stat-val">${lista.length}</div><div class="stat-sub">registros</div></div>
+      <div class="stat" style="flex:1;min-width:120px"><div class="stat-label">Acadêmico</div><div class="stat-val" style="color:var(--accent)">${acad}</div><div class="stat-sub">registros</div></div>
+      <div class="stat" style="flex:1;min-width:120px"><div class="stat-label">Disciplinar</div><div class="stat-val" style="color:var(--red)">${disc}</div><div class="stat-sub">registros</div></div>`;
+  }
+
+  const wrap = document.getElementById('atend-hist-lista');
+  if (!wrap) return;
+  if (!lista.length) {
+    wrap.innerHTML = '<div class="empty"><span class="e-ico">📋</span><p>Nenhum registro encontrado.</p></div>';
+    return;
+  }
+  wrap.innerHTML = lista.map(a => {
+    const dataFmt = a.data ? new Date(a.data+'T12:00:00').toLocaleDateString('pt-BR') : '—';
+    const temaCls = a.tema==='disciplinar' ? 'color:var(--red)' : 'color:var(--accent)';
+    const temaLabel = a.tema==='disciplinar' ? 'Disciplinar' : 'Acadêmico';
+    return `<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px;margin-bottom:10px;box-shadow:var(--shadow)">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap">
+        <span style="font-size:15px;font-weight:600;flex:1">${a.nome_aluno}</span>
+        <span style="font-size:11px;padding:2px 10px;border-radius:10px;background:var(--surface2);${temaCls};font-weight:600;border:1px solid currentColor">${temaLabel}</span>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:${a.relato?'8px':'0'};font-size:12px;color:var(--text3)">
+        <span>📅 ${dataFmt}</span>
+        ${a.turma?'<span>🏫 '+a.turma+'</span>':''}
+        ${a.registrado_por?'<span>👤 '+a.registrado_por+'</span>':''}
+      </div>
+      ${a.relato?`<div style="font-size:13px;color:var(--text);line-height:1.5;white-space:pre-wrap;background:var(--surface2);padding:10px 12px;border-radius:8px">${a.relato}</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+function atendLimparFiltros() {
+  const al=document.getElementById('atend-hist-aluno');
+  const te=document.getElementById('atend-hist-tema');
+  const pe=document.getElementById('atend-hist-periodo');
+  if(al)al.value=''; if(te)te.value=''; if(pe)pe.value='30';
+  atendRenderHistorico();
+}
+
+// supaInsert (se não existir)
+if (typeof supaInsert === 'undefined') {
+  window.supaInsert = async function(table, row) {
+    const res = await fetch(`${SUPA_URL}/rest/v1/${table}`, {
+      method:'POST',
+      headers:{...SUPA_HEADERS,'Prefer':'return=representation'},
+      body: JSON.stringify(row)
+    });
+    if(!res.ok) throw new Error(await res.text());
+    return res.json();
+  };
 }
 
 </script>
