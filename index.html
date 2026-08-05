@@ -6895,23 +6895,6 @@ function renderModalGrid(lista) {
 }
 
 // ── Modalidades: estado de edições em memória ─────────────────
-// Estrutura: { "MODAL::DESC": { added: [{nome,turma,tel,resp}], removed: Set(nome) } }
-let _modalEdits = {};
-
-function _getModalKey(nomeModal, desc) { return nomeModal + '::' + desc; }
-
-function _getAlunosList(nomeModal, tDesc) {
-  const m = MODALIDADES_DATA.find(x => x.modal === nomeModal);
-  if (!m) return [];
-  const t = m.turmas.find(x => x.desc === tDesc);
-  if (!t) return [];
-  const key = _getModalKey(nomeModal, tDesc);
-  const edits = _modalEdits[key] || { added: [], removed: new Set() };
-  const base = t.alunos.filter(a => !edits.removed.has(a.nome));
-  return [...base, ...edits.added];
-}
-
-// ── Modalidades: estado de edições em memória ─────────────────
 let _modalEdits = {};
 function _getModalKey(nm, d) { return nm + '::' + d; }
 function _getAlunosList(nm, tDesc) {
