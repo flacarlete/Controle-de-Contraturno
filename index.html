@@ -1453,7 +1453,9 @@ async function saveUsers(users) {
       body: JSON.stringify(users.map(u => ({
         id: u.id, login: u.login, name: u.name,
         role: u.role, pwd: u.pwd,
-        tabs: u.tabs ? JSON.stringify(u.tabs) : null
+        tabs: u.tabs ? JSON.stringify(u.tabs) : null,
+        papel: u.role, abas: u.tabs ? JSON.stringify(u.tabs) : null,
+        nome: u.name
       })))
     });
   } catch(e) { console.error('Erro ao salvar usuários:', e.message); }
@@ -1468,9 +1470,14 @@ async function loadUsersFromSupabase() {
     const data = await res.json();
     if (data && data.length > 0) {
       _usersCache = data.map(u => ({
-        id: u.id, login: u.login, name: u.name,
-        role: u.role, pwd: u.pwd,
-        tabs: u.tabs ? (typeof u.tabs === 'string' ? JSON.parse(u.tabs) : u.tabs) : null
+        id: u.id || u['eu ia'],
+        login: u.login || u['Conecte-se'],
+        name: u.name || u.nome,
+        role: u.role || u.papel,
+        pwd: u.pwd,
+        tabs: u.tabs || u.abas
+          ? (typeof (u.tabs||u.abas) === 'string' ? JSON.parse(u.tabs||u.abas) : (u.tabs||u.abas))
+          : null
       }));
     } else {
       // Primeira vez: seed com DEFAULT_USERS
@@ -7458,11 +7465,4 @@ if (typeof supaInsert === 'undefined') {
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn" onclick="ortCloseModal()">Cancelar</button>
-      <button class="btn" style="background:var(--red-bg);color:var(--red);border-color:var(--red)" onclick="ortConfirmFlag()">✕ Registrar como não feita</button>
-    </div>
-  </div>
-</div>
-
-</body>
-</html>
+      <button class="btn" onclick="ortCloseModal()
