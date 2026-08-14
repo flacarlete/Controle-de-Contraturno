@@ -1392,6 +1392,15 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 </div>
 
 <script>
+const SUPA_URL = 'https://elimvidualutiifnolxy.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVsaW12aWR1YWx1dGlpZm5vbHh5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzMjY2NzAsImV4cCI6MjA5NTkwMjY3MH0.90hMsFqCaP3ovXlwhxmpChHT6W6qF-xIVzyiokDlMbA';
+const SUPA_HEADERS = {
+  'apikey': SUPA_KEY,
+  'Authorization': 'Bearer ' + SUPA_KEY,
+  'Content-Type': 'application/json',
+  'Prefer': 'return=minimal'
+};
+
 // ══════════════════════════════════════════════════════════
 // USUÁRIOS E AUTH
 // ══════════════════════════════════════════════════════════
@@ -7465,4 +7474,11 @@ if (typeof supaInsert === 'undefined') {
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn" onclick="ortCloseModal()
+      <button class="btn" onclick="ortCloseModal()">Cancelar</button>
+      <button class="btn" style="background:var(--red-bg);color:var(--red);border-color:var(--red)" onclick="ortConfirmFlag()">✕ Registrar como não feita</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
